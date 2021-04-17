@@ -29,7 +29,7 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return loading ? Loading() : Scaffold(
-      backgroundColor: Colors.grey[800],
+      //backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Sign In'),
         centerTitle: false,
@@ -50,7 +50,8 @@ class _SignInState extends State<SignIn> {
       body: Center(
         child: Stack(
           children: [
-            //Image(image: AssetImage('assets/dog1.jpg')),
+            Image(image: AssetImage('assets/cat.jpg'),
+                fit: BoxFit.cover),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0),
               child: Form(
