@@ -66,7 +66,7 @@ class DetailScreen extends StatelessWidget {
               print('${dbData.uid}');
               DatabaseService(uid: dbData.uid).updateUserData(dbData.breed,
                   dbData.gender, dbData.description, dbData.name, dbData.phone,
-                  dbData.location, 'Adopted', dbData.userId);
+                  dbData.location, 'Adopted', dbData.userId,dbData.imgUrl);
             },
           ) : IconButton(
               icon: Icon(LineIcons.timesCircle,
@@ -85,7 +85,8 @@ class DetailScreen extends StatelessWidget {
           child: Column(
             children: [
               CircleAvatar(
-                backgroundImage: AssetImage('assets/cat2.jpg'),
+                // backgroundImage: AssetImage('assets/cat2.jpg'),
+                backgroundImage: NetworkImage(dbData.imgUrl),
                 radius: 100.0,
               ),
               Stack(
@@ -248,8 +249,6 @@ class DetailScreen extends StatelessWidget {
                                        ),
                                      ],
                                    ),
-                                   SizedBox(height: 20,
-                                   child: Text(dbData.userId),),
                                  ],
                                ),
                              ),

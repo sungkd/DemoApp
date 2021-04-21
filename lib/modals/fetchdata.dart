@@ -4,10 +4,11 @@ class DispData {
   final int phone;
   final dynamic userId;
   final dynamic uid;
+  final dynamic imgUrl;
 
   DispData({
     this.breed, this.gender, this.description,
     this.name, this.phone, this.location,
-    this.status, this.userId, this.uid
+    this.status, this.userId, this.uid, this.imgUrl
   });
 }

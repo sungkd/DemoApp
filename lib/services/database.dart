@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fluuter_provider/modals/fetchdata.dart';
 import 'package:fluuter_provider/modals/user.dart';
+import 'package:image_picker/image_picker.dart';
 
 class DatabaseService {
 
@@ -13,7 +15,7 @@ class DatabaseService {
 
   Future updateUserData(String breed, String gender, String description,
       String name,  int phone,  String location,
-      String status, dynamic userId) async
+      String status, dynamic userId, String url) async
   {
 
     return await petData.doc(uid).set(
@@ -26,6 +28,7 @@ class DatabaseService {
           'location': location,
           'status': status,
           'userId': userId,
+          'imgUrl': url,
         }
     );
   }
@@ -43,6 +46,7 @@ class DatabaseService {
         status: doc.data()['status'] ?? '',
         userId: doc.data()['userId'] ?? '',
         uid: doc.id ?? '',
+        imgUrl: doc.data()['imgUrl'] ?? '',
 
       );
     }).toList();
@@ -60,6 +64,7 @@ class DatabaseService {
       location: snapshot.data()['location'] ,
       status: snapshot.data()['status'] ,
       userId: snapshot.data()['userId'] ,
+      imgUrl: snapshot.data()['imgUrl'] ,
 
     );
   }
@@ -80,16 +85,6 @@ class DatabaseService {
 
 class ProcessUid {
 
-  String _description = '';
-  String _gender = '';
-  String _breed = '';
-  String _name  = '';
-  String _location = '';
-  String _status = '';
-  int _phone = 0;
-  dynamic _userId = '';
-  dynamic _docUid = '';
-
   //Collection Reference
   final CollectionReference petData = FirebaseFirestore.instance.collection('Data');
 
@@ -105,62 +100,29 @@ class ProcessUid {
       status: snapshot.data()['status'] ,
       userId: snapshot.data()['userId'] ,
       uid: snapshot.id,
+      imgUrl: snapshot.data()['imgUrl'] ,
 
     );
   }
-
-
-  // Future getData() async {
-  //   QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection("Data").get();
-  //   for (int i = 0; i < querySnapshot.docs.length; i++) {
-  //     var a = querySnapshot.docs[i];
-  //
-  //     print('Inside loop');
-  //     _breed = a.data()['breed'];
-  //     _description = a.data()['description'];
-  //     _name = a.data()['name'];
-  //     _gender = a.data()['gender'];
-  //     _phone = a.data()['phone'];
-  //     _location = a.data()['location'];
-  //     _userId = a.data()['userId'];
-  //     _status = a.data()['status'];
-  //     _docUid = a.id;
-  //
-  //
-  //     if((a.data()['description'] == "description") &&
-  //         (_userId = a.data()['userId'] == "userId" ) )
-  //     {
-  //
-  //     }
-  //     else {
-  //       print('Error');
-  //     }
-  //   }
-  //
-  // }
-
-// final CollectionReference petData = FirebaseFirestore.instance.collection('Data');
-//
-// Future updateAdoptStatus(String breed, String gender, String description,
-//     String name,  int phone,  String location,
-//     String status, dynamic userId) async
-// {
-//   print('1223- $_description');
-//
-//   return await petData.doc(_docUid).set(
-//       {
-//         'breed': _breed,
-//         'gender': _gender,
-//         'description': _description,
-//         'name' : _name,
-//         'phone': _phone,
-//         'location': _location,
-//         'status': _status,
-//         'userId': _userId,
-//       }
-//   );
-// }
-
-
-
 }
+
+
+// class UploadImage {
+//
+//   FirebaseStorage storage = FirebaseStorage.instance;
+//
+//   // Select and image from the gallery or take a picture with the camera
+//   // Then upload to Firebase Storage
+//   Future<void> _upload(String inputSource) async {
+//     final picker = ImagePicker();
+//     PickedFile pickedImage;
+//       try {
+//             pickedImage = await picker.getImage(
+//                 source: ImageSource.gallery,
+//                 maxWidth: 1920);
+//       }
+//       catch (e) {
+//         print('$e');
+//       }
+//     }
+// }

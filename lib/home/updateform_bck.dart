@@ -93,7 +93,7 @@ class _UpdateFormState extends State<UpdateForm> {
                              'Indie', 'Female', _currentName ?? uploadData1.description,
                              'Sunny', 12345678, 'Mumbai',
                              _currentstatus ?? uploadData1.status,
-                           getuser.uid);
+                           getuser.uid, uploadData1.imgUrl);
                          Navigator.pop(context);
                        }
                        // print(_currentName);

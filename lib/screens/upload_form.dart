@@ -1,9 +1,14 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluuter_provider/services/database.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:fluuter_provider/constants/decorate.dart';
 import 'package:fluuter_provider/modals/user.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
 
 
 class UploadForm extends StatefulWidget {
@@ -19,13 +24,44 @@ class _UploadFormState extends State<UploadForm> {
   String _gender = '';
   String _description = '';
   String _phone = '';
+  String url = '';
+
 
   final List<String> petBreed = ['Indie', 'Mixed', 'Pure'];
   final List<String> petGender = ['Male', 'Female'];
 
-
-
   final _formKey = GlobalKey<FormState>();
+
+  PickedFile pickedImage;
+  File _image;
+  File imageFile;
+  String fileName = '';
+
+  Future getImage(String _gallery) async {
+
+
+    final picker = ImagePicker();
+
+    if(_gallery == 'gallery') {
+      pickedImage = await picker.getImage(source: ImageSource.gallery);
+    }
+     fileName = path.basename(pickedImage.path);
+     imageFile = File(pickedImage.path);
+
+    setState(() {
+      _image = imageFile;
+
+    });
+    print('$fileName');
+    print('$imageFile');
+
+  }
+
+  getImageURL({String name}) async {
+    url  = await FirebaseStorage.instance.ref(fileName).getDownloadURL();
+    print('$url');
+  }
+
 
   String _value = '';
   @override
@@ -33,6 +69,8 @@ class _UploadFormState extends State<UploadForm> {
 
     final getuser = Provider.of<UserData>(context);
     final CollectionReference petData = FirebaseFirestore.instance.collection('Data');
+    FirebaseStorage storage = FirebaseStorage.instance;
+
 
 
     return Scaffold(
@@ -123,10 +161,61 @@ class _UploadFormState extends State<UploadForm> {
                           },
                         ),
                         SizedBox(height: 35,),
+                        ElevatedButton.icon(
+                            label: Text('Upload Image'),
+                            icon: Icon(LineIcons.camera,),
+                            onPressed: () {
+                              print('Image button pressed');
+
+                              //Select image from gallery
+                              getImage('gallery');
+
+                            },
+                            // child: Text('Upload Image'),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.red , //background
+                            )
+                        ),
+                        _image == null ? Container() : Image.file(_image,
+                        width: 150,
+                        height: 150,),
+                        SizedBox(height: 25,
+                        child: ElevatedButton(
+                          child: Text('Upload'),
+                          onPressed: () async {
+
+                        // await storage.ref(fileName).putFile(
+                        //         imageFile,
+                        //         SettableMetadata(customMetadata: {
+                        //           'uploaded_by': 'A bad guy',
+                        //           'description': 'Some description...'
+                        //         }));
+                        //
+                        // getImageURL();
+
+                          },
+                        ),),
+                        SizedBox(height: 35,),
+
+                        /*Display Selected image
+                        * _image == null ? Container() : Image.file(_image,),
+                        * */
+
                         ElevatedButton(
                             child: Text('Submit'),
                           onPressed: () async {
                             if(_formKey.currentState.validate()) {
+
+                              await storage.ref(fileName).putFile(
+                                  imageFile,
+                                  SettableMetadata(customMetadata: {
+                                    'uploaded_by': 'A bad guy',
+                                    'description': 'Some description...'
+                                  }));
+
+                              url  = await FirebaseStorage.instance.ref(fileName).getDownloadURL();
+
+                              print('out $url');
 
                               petData.doc().set( {
                                 'breed': _breed,
@@ -137,7 +226,10 @@ class _UploadFormState extends State<UploadForm> {
                                 'location': _location,
                                 'status': 'Not Adopted',
                                 'userId': getuser.uid,
+                                'imgUrl': url,
+
                               });
+
                               Navigator.pop(context);
 
                               // print(_breed);
@@ -159,6 +251,7 @@ class _UploadFormState extends State<UploadForm> {
                       ],
                     ),
                   ),
+
                 ],
               ),
             ),
