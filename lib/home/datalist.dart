@@ -22,11 +22,13 @@ class _DataListState extends State<DataList> {
    //
    // });
 
-   return ListView.builder(
-       itemCount: datalist.length,
-       itemBuilder: (context, index) {
-         return DataTile(dbData: datalist[index]);
-       }
+   return SafeArea(
+     child: ListView.builder(
+         itemCount: datalist.length,
+         itemBuilder: (context, index) {
+           return DataTile(dbData: datalist[index]);
+         }
+     ),
    );
   }
 }

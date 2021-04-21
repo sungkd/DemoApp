@@ -28,6 +28,9 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
+
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return loading ? Loading() : Scaffold(
       backgroundColor: Colors.grey[800],
       appBar: AppBar(
@@ -36,7 +39,7 @@ class _RegisterState extends State<Register> {
         backgroundColor: Colors.grey[900],
         actions: [
           TextButton.icon(
-              icon: Icon(Icons.person,
+              icon: Icon(LineIcons.dog,
                   color: Colors.white),
               label: Text('Sign In',
                 style: TextStyle(color: Colors.white),
@@ -47,70 +50,76 @@ class _RegisterState extends State<Register> {
           ),
         ],
       ),
-      body: Center(
-        child: Stack(
-          children: [
-            //Image(image: AssetImage('assets/dog1.jpg')),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    SizedBox(height: 20),
-                    TextFormField(
-                      decoration: textInputDecoration.copyWith(hintText: 'Email',
-                      hintStyle: TextStyle(color: Colors.white),
-                      icon:  Icon(LineIcons.userCircle,color: Colors.white)),
-                      validator: (val) => val.isEmpty ? 'Enter email' : null,
-                      onChanged: (val) {
-                        setState(() => email = val);
-                      },
-                    ),
-
-                    SizedBox(height: 20),
-
-                    TextFormField(
-                      decoration: textInputDecoration.copyWith(hintText: 'Password',
-                          hintStyle: TextStyle(color: Colors.white),
-                          icon:  Icon(LineIcons.lock,color: Colors.white)),
-
-                      validator: (val) => val.length < 8 ? 'Password must be 8 characters long' : null,
-                      onChanged: (val) {
-                        setState(() => password = val);
-                      },
-                      obscureText: true,
-                    ),
-
-                    SizedBox(height: 20),
-
-                    ElevatedButton(
-                      child: Text('Register',
+      body: SingleChildScrollView(
+        child: Center(
+          child: Stack(
+            children: [
+              Image(image: AssetImage('assets/dog1.jpg'),
+                  fit: BoxFit.fill,
+                  height: screenHeight - 110 ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(25.0,180,40,0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20),
+                      TextFormField(
                         style: TextStyle(color: Colors.white),
+                        decoration: textInputDecoration.copyWith(hintText: 'Email',
+                        hintStyle: TextStyle(color: Colors.white),
+                        icon:  Icon(LineIcons.userCircle,color: Colors.white)),
+                        validator: (val) => val.isEmpty ? 'Enter email' : null,
+                        onChanged: (val) {
+                          setState(() => email = val);
+                        },
                       ),
-                      onPressed: () async {
-                       if(_formKey.currentState.validate()) {
-                         setState( () => loading = true);
-                         dynamic result = await _auth.registerUser(email,password);
-                         if (result == null) {
-                           setState(() {
-                             error = 'Please supply valid email';
-                             loading = false;
-                           });
+
+                      SizedBox(height: 20),
+
+                      TextFormField(
+                        style: TextStyle(color: Colors.white),
+                        decoration: textInputDecoration.copyWith(hintText: 'Password',
+                            hintStyle: TextStyle(color: Colors.white),
+                            icon:  Icon(LineIcons.lock,color: Colors.white)),
+
+                        validator: (val) => val.length < 8 ? 'Password must be 8 characters long' : null,
+                        onChanged: (val) {
+                          setState(() => password = val);
+                        },
+                        obscureText: true,
+                      ),
+
+                      SizedBox(height: 20),
+
+                      ElevatedButton(
+                        child: Text('Register',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () async {
+                         if(_formKey.currentState.validate()) {
+                           setState( () => loading = true);
+                           dynamic result = await _auth.registerUser(email,password);
+                           if (result == null) {
+                             setState(() {
+                               error = 'Please supply valid email';
+                               loading = false;
+                             });
+                           }
                          }
-                       }
-                      },
-                    ),
-                    SizedBox(height: 20),
-                    Text(
-                      error,
-                      style: TextStyle(color: Colors.red, fontSize: 15.0),
-                    ),
-                  ],
+                        },
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        error,
+                        style: TextStyle(color: Colors.red, fontSize: 15.0),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
