@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluuter_provider/modals/fetchdata.dart';
 import 'package:fluuter_provider/screens/pet_detail.dart';
@@ -10,6 +11,13 @@ class DataTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final cachedImage = new CachedNetworkImage(
+      // placeholder: (context, url) => CircularProgressIndicator(),
+      imageUrl: dbData.imgUrl,
+
+    );
+
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Padding(

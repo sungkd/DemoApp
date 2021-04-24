@@ -15,13 +15,6 @@ class _DataListState extends State<DataList> {
 
    final datalist = Provider.of<List<DispData>>(context) ?? [];
 
-   // datalist.forEach((datalist) {
-   //   print(datalist.location);
-   //   print(datalist.name);
-   //   print(datalist.description);
-   //
-   // });
-
    return SafeArea(
      child: ListView.builder(
          itemCount: datalist.length,
@@ -32,16 +25,5 @@ class _DataListState extends State<DataList> {
          }
      ),
    );
-
-  //  return GridView.builder(
-  //      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-  //        crossAxisCount: 2,
-  //          // crossAxisSpacing: 1.0,
-  //          // mainAxisSpacing: 1.0
-  //      ),
-  //      primary: false,
-  //      shrinkWrap: true,
-  //      itemCount: datalist.length,
-  //      itemBuilder: (context, index) => DataTile(dbData: datalist[index]));
    }
 }
