@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluuter_provider/services/database.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:fluuter_provider/constants/decorate.dart';
 import 'package:fluuter_provider/modals/user.dart';
@@ -36,6 +35,10 @@ class _UploadFormState extends State<UploadForm> {
   File _image;
   File imageFile;
   String fileName = '';
+  String _error = '' ;
+
+  double _containerWidth = 380;
+  double _containerHeight = 1000;
 
   Future getImage(String _gallery) async {
 
@@ -62,8 +65,6 @@ class _UploadFormState extends State<UploadForm> {
     print('$url');
   }
 
-
-  String _value = '';
   @override
   Widget build(BuildContext context) {
 
@@ -72,151 +73,253 @@ class _UploadFormState extends State<UploadForm> {
     FirebaseStorage storage = FirebaseStorage.instance;
 
 
-
     return Scaffold(
-        backgroundColor: Colors.teal[800],
-        appBar: AppBar(
-          title: Text('Upload'),
-          backgroundColor: Color(0xff416d6d),
-          leading: IconButton(
-            icon: Icon(LineIcons.backward,
+      backgroundColor: Colors.grey[400],
+      appBar: AppBar(
+        backgroundColor: Color(0xffFF045C5C),
+        elevation: 1.2,
+        title: RichText(
+          text: TextSpan(
+            text: "Adoption Request",
+            style: TextStyle(
               color: Colors.white,
+              letterSpacing: 1.0,
+              fontSize: 15.0,
             ),
-            onPressed: () => Navigator.pop(context),
           ),
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-              padding: const EdgeInsets.fromLTRB(25, 50, 25, 0),
-              child: Column(
-                children: [
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                     TextFormField(
-                         style: TextStyle(color: Colors.white),
-                         decoration: textInputDecoration.copyWith(hintText: 'Enter breed',
-                         hintStyle: TextStyle(color: Colors.white),
-                         icon:  Icon(LineIcons.dog, color: Colors.white,)),
-                         validator: (val) => val.isEmpty ? 'Enter a breed' : null,
-                         onChanged: (val) {
-                            setState(() => _breed = val);
-                         },
-                     ),
-                        SizedBox(height: 20),
-                        TextFormField(
-                          style: TextStyle(color: Colors.white),
-                          decoration: textInputDecoration.copyWith(hintText: 'Gender',
-                              hintStyle: TextStyle(color: Colors.white),
-                              icon:  Icon(LineIcons.mars, color: Colors.white,)),
-                          validator: (val) => val.isEmpty ? 'Enter Gender' : null,
-                          onChanged: (val) {
-                            setState(() => _gender = val);
-                          },
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+          child: Column(
+            children: [
+              Container(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                        Container(
+                            child: _image == null ? InkResponse(
+                              onTap: () {
+                                //Select image from gallery
+                                getImage('gallery');
+                              },
+                              child: Icon(LineIcons.camera,
+                                          size: 50,),
+                            ) : InkResponse(
+                              onTap: () {
+                                //Select image from gallery
+                                getImage('gallery');
+                              },
+                              child: CircleAvatar(
+                                backgroundImage: FileImage(_image,
+                                scale: 1),
+                                radius: 70,
+                              ),
+                            ),
+                            alignment: Alignment.center,
+                            padding: _image != null ? EdgeInsets.all(0) : EdgeInsets.all(35),
+                            decoration: _image != null ? BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey[200]
+                            ) : BoxDecoration(
+                              color: Colors.grey[300],
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+
+                      RichText(
+                        textAlign: TextAlign.start,
+                        text: TextSpan(
+                          text: 'Breed',
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold
+                          ),
                         ),
-                        SizedBox(height: 20),
-                        TextFormField(
-                          style: TextStyle(color: Colors.white),
-                          decoration: textInputDecoration.copyWith(hintText: 'Description',
-                              hintStyle: TextStyle(color: Colors.white),
-                              icon:  Icon(LineIcons.pen, color: Colors.white,)),
-                          validator: (val) => val.isEmpty ? 'Enter Description' : null,
-                          onChanged: (val) {
-                            setState(() => _description = val);
-                          },
+                      ),
+                      SizedBox(height: 10,),
+                      TextFormField(
+                        style: TextStyle(color: Colors.black87),
+                        decoration: richTextDecoration.copyWith(
+                            labelText: 'Breed',
                         ),
-                        SizedBox(height: 20),
-                        TextFormField(
-                          style: TextStyle(color: Colors.white),
-                          decoration: textInputDecoration.copyWith(hintText: 'Contact Person Name',
-                              hintStyle: TextStyle(color: Colors.white),
-                              icon:  Icon(LineIcons.userCircle, color: Colors.white,)),
-                          validator: (val) => val.isEmpty ? 'Enter name' : null,
-                          onChanged: (val) {
-                            setState(() => _name = val);
-                          },
+                        validator: (val) => (val.isEmpty) ? 'Field cannot be blank'
+                        : (val.toLowerCase() == 'mixed')  ? null
+                        : (val.toLowerCase() == 'indie')  ? null
+                        : (val.toLowerCase() == 'pure')   ? null
+                        : 'Breed should be Mixed, Pure or Indie',
+
+                        onChanged: (val) {
+                          setState(() => _breed = val);
+                        },
+                      ),
+
+                      SizedBox(height: 10,),
+                      RichText(
+                        textAlign: TextAlign.start,
+                        text: TextSpan(
+                          text: 'Gender',
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold
+                          ),
                         ),
-                        SizedBox(height: 20),
-                        TextFormField(
-                          style: TextStyle(color: Colors.white),
-                          keyboardType:TextInputType.number,
-                          decoration: textInputDecoration.copyWith(hintText: 'Phone Number',
-                              hintStyle: TextStyle(color: Colors.white),
-                              icon:  Icon(LineIcons.phoneSquare, color: Colors.white,)),
-                          validator: (val) => val.isEmpty ? 'Enter phone number' : null,
-                          onChanged: (val) {
-                            setState(() => _phone = val);
-                          },
+                      ),
+
+                      SizedBox(height: 10,),
+                      TextFormField(
+                        style: TextStyle(color: Colors.black87),
+                        decoration: richTextDecoration.copyWith(
+                            labelText: 'Male/Female'
                         ),
-                        SizedBox(height: 20),
-                        TextFormField(
-                          style: TextStyle(color: Colors.white),
-                          decoration: textInputDecoration.copyWith(hintText: 'Location',
-                              hintStyle: TextStyle(color: Colors.white),
-                              icon:  Icon(LineIcons.mapMarker, color: Colors.white,)),
-                          validator: (val) => val.isEmpty ? 'Enter a location' : null,
-                          onChanged: (val) {
-                            setState(() => _location = val);
-                          },
+                        validator: (val) => (val.isEmpty) ? 'Field cannot be blank'
+                            : (val.toLowerCase() == 'male')  ? null
+                            : (val.toLowerCase() == 'female')  ? null
+                            : 'Gender should be Male or Female' ,
+
+                        onChanged: (val) {
+                          setState(() => _gender = val);
+                        },
+                      ),
+
+
+                      SizedBox(height: 10,),
+                      RichText(
+                        textAlign: TextAlign.start,
+                        text: TextSpan(
+                          text: 'Details',
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold
+                          ),
                         ),
-                        SizedBox(height: 35,),
-                        ElevatedButton.icon(
-                            label: Text('Upload Image'),
-                            icon: Icon(LineIcons.camera,),
-                            onPressed: () {
-                              print('Image button pressed');
+                      ),
 
-                              //Select image from gallery
-                              getImage('gallery');
-
-                            },
-                            // child: Text('Upload Image'),
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.red , //background
-                            )
+                      SizedBox(height: 10,),
+                      TextFormField(
+                        style: TextStyle(color: Colors.black87),
+                        decoration: richTextDecoration.copyWith(
+                            labelText: 'Pet Detail'
                         ),
-                        _image == null ? Container() : Image.file(_image,
-                        width: 150,
-                        height: 150,),
-                        SizedBox(height: 25,
-                        child: ElevatedButton(
-                          child: Text('Upload'),
-                          onPressed: () async {
+                        validator: (val) => (val.isEmpty) ? 'Enter details'
+                        : null,
+                        onChanged: (val) {
+                          setState(() => _description = val);
+                        },
+                      ),
 
-                        // await storage.ref(fileName).putFile(
-                        //         imageFile,
-                        //         SettableMetadata(customMetadata: {
-                        //           'uploaded_by': 'A bad guy',
-                        //           'description': 'Some description...'
-                        //         }));
-                        //
-                        // getImageURL();
+                      SizedBox(height: 10,),
+                      RichText(
+                        textAlign: TextAlign.start,
+                        text: TextSpan(
+                          text: 'Contact Person',
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ),
 
-                          },
-                        ),),
-                        SizedBox(height: 35,),
+                      SizedBox(height: 10,),
+                      TextFormField(
+                        style: TextStyle(color: Colors.black87),
+                        decoration: richTextDecoration.copyWith(
+                            labelText: 'Name'
+                        ),
+                        validator: (val) => (val.isEmpty) ? 'Enter name'
+                            : null,
+                        onChanged: (val) {
+                          setState(() => _name = val);
+                        },
+                      ),
 
-                        /*Display Selected image
-                        * _image == null ? Container() : Image.file(_image,),
-                        * */
+                      SizedBox(height: 10,),
+                      RichText(
+                        textAlign: TextAlign.start,
+                        text: TextSpan(
+                          text: 'Phone',
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ),
 
-                        ElevatedButton(
-                            child: Text('Submit'),
-                          onPressed: () async {
-                            if(_formKey.currentState.validate()) {
+                      SizedBox(height: 10,),
+                      TextFormField(
+                        style: TextStyle(color: Colors.black87),
+                        decoration: richTextDecoration.copyWith(
+                            labelText: 'Phone number'
+                        ),
+                        keyboardType: TextInputType.number,
+                        validator: (val) => (val.isEmpty) ? 'Enter phone number'
+                        : (val.length == 10) ? null : 'Phone number should be of 10 digits',
+                        onChanged: (val) {
+                          setState(() => _phone = val);
+                        },
+                      ),
 
-                              await storage.ref(fileName).putFile(
-                                  imageFile,
-                                  SettableMetadata(customMetadata: {
-                                    'uploaded_by': 'A bad guy',
-                                    'description': 'Some description...'
-                                  }));
 
-                              url  = await FirebaseStorage.instance.ref(fileName).getDownloadURL();
+                      SizedBox(height: 10,),
+                      RichText(
+                        textAlign: TextAlign.start,
+                        text: TextSpan(
+                          text: 'Location',
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ),
 
-                              print('out $url');
+                      SizedBox(height: 10,),
+                      TextFormField(
+                        style: TextStyle(color: Colors.black87),
+                        decoration: richTextDecoration.copyWith(
+                            labelText: 'Location',
+                            hintText: 'Bandra,Mumbai',
+                        ),
+                        validator: (val) => (val.isEmpty) ? 'Enter a location'
+                        : null,
+                        onChanged: (val) {
+                          setState(() => _location = val);
+                        },
+                      ),
+                      SizedBox(height: 20,),
 
+                      TextButton(
+                        child: Text('Login',
+                          style: TextStyle(
+                              color: Colors.white
+                          ),),
+                        style: textButtonStyle,
+                        onPressed: () async {
+                          if(_formKey.currentState.validate() && _image != null) {
+
+                            await storage.ref(fileName).putFile(
+                                imageFile,
+                                SettableMetadata(customMetadata: {
+                                  'uploaded_by': _name,
+                                  'description': DateTime.now().toString()
+                                }
+                                )
+                            );
+
+                            url  = await FirebaseStorage.instance
+                                   .ref(fileName).getDownloadURL();
+
+                            if (url != null) {
                               petData.doc().set( {
                                 'breed': _breed,
                                 'gender': _gender,
@@ -228,34 +331,44 @@ class _UploadFormState extends State<UploadForm> {
                                 'userId': getuser.uid,
                                 'imgUrl': url,
 
-                              });
-
+                                }
+                              );
                               Navigator.pop(context);
-
-                              // print(_breed);
-                              // print(_gender);
-                              // print(_description);
-                              // print(_location);
-                              // print(_name);
-
-                            //   await DatabaseService(uid: getuser.uid).updateUserData(
-                            //       _breed, _gender, _description,
-                            //       _name, int.parse(_phone), _location, 'Not Adopted');
-                            //   Navigator.pop(context);
-                             }
-                            else {
-                              return "error";
                             }
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
+                            else {
+                              _error = 'Error while loading data';
+                            }
 
-                ],
+                          }
+                          else{
+                            _error = 'Attach pet image';
+                          }
+                        },
+                      ),
+                      SizedBox(height: 15),
+                      Center(
+                        child: Text(
+                          '$_error',
+                          style: TextStyle(color: Colors.red, fontSize: 15.0),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10)
+                ),
+                width: _containerWidth,
+                height: _containerHeight,
+                margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
               ),
-            ),
+            ],
+          ),
         ),
-      );
+      ),
+    );
   }
 }

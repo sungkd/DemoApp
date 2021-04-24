@@ -25,10 +25,23 @@ class _DataListState extends State<DataList> {
    return SafeArea(
      child: ListView.builder(
          itemCount: datalist.length,
+         primary: false,
+         shrinkWrap: true,
          itemBuilder: (context, index) {
            return DataTile(dbData: datalist[index]);
          }
      ),
    );
-  }
+
+  //  return GridView.builder(
+  //      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //        crossAxisCount: 2,
+  //          // crossAxisSpacing: 1.0,
+  //          // mainAxisSpacing: 1.0
+  //      ),
+  //      primary: false,
+  //      shrinkWrap: true,
+  //      itemCount: datalist.length,
+  //      itemBuilder: (context, index) => DataTile(dbData: datalist[index]));
+   }
 }

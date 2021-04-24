@@ -23,6 +23,7 @@ class LoadScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamProvider<UserData>.value(
+      initialData: null,
       value: AuthService().uservalue,
       child: MaterialApp(
         home: Wrapper(),

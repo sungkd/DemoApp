@@ -1,9 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fluuter_provider/modals/fetchdata.dart';
 import 'package:fluuter_provider/modals/user.dart';
-import 'package:image_picker/image_picker.dart';
 
 class DatabaseService {
 

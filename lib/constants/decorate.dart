@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icons.dart';
 
  const textInputDecoration =
   InputDecoration(
@@ -19,3 +18,24 @@ import 'package:line_icons/line_icons.dart';
     ),
   );
 
+
+ var richTextDecoration =
+   InputDecoration(
+     enabledBorder: OutlineInputBorder(
+       borderSide: BorderSide(width: 3, color: Colors.blue),
+       borderRadius: BorderRadius.circular(10),
+     ),
+     focusedBorder: OutlineInputBorder(
+       borderSide: BorderSide(width: 3, color: Colors.teal.shade400),
+       borderRadius: BorderRadius.circular(10),
+     ),
+   );
+
+
+ var textButtonStyle = TextButton.styleFrom(
+     backgroundColor: Colors.blue[600],
+     elevation: 1.5,
+     shape:  RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+     shadowColor: Colors.black,
+     minimumSize: Size(350,50)
+ );

@@ -3,10 +3,6 @@ import 'package:flutter/material.dart';
 
 class MyUploads extends StatefulWidget {
 
-  // String rideId;
-  // MyUploads({@required this.rideId});
-
-
   @override
   _MyUploadsState createState() => _MyUploadsState();
 }

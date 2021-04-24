@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluuter_provider/modals/fetchdata.dart';
 import 'package:fluuter_provider/screens/pet_detail.dart';
-import 'package:fluuter_provider/home/datalist.dart';
-import 'package:fluuter_provider/modals/user.dart';
-import 'package:line_icons/line_icons.dart';
 
 class DataTile extends StatelessWidget {
 
@@ -20,14 +17,15 @@ class DataTile extends StatelessWidget {
         child: Card(
           margin: EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 0),
           child: ListTile(
+            tileColor: (dbData.status == 'Adopted') ? Colors.grey : Colors.white,
+            shape: CircleBorder(),
             leading: CircleAvatar(
-              // backgroundImage: AssetImage('assets/dog1.jpg'),
               backgroundImage: NetworkImage(dbData.imgUrl),
-              radius: 25.0,
+              radius: 30.0,
               backgroundColor: Colors.white,
             ),
             enabled: (dbData.status == 'Adopted') ? false : true,
-            title: Text(dbData.name),
+            title: Text(dbData.status),
             subtitle: Text(dbData.description),
             isThreeLine: true,
             onTap: () {
@@ -39,7 +37,10 @@ class DataTile extends StatelessWidget {
             },
           ),
         ),
+
       ),
     );
   }
+
+
 }

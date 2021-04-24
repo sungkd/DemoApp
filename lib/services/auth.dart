@@ -1,7 +1,6 @@
 /* File used to access Firebase Auth Services*/
 import 'package:fluuter_provider/modals/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fluuter_provider/services/database.dart';
 
 class AuthService {
 
@@ -10,7 +9,7 @@ class AuthService {
 
   //Create user object based on firebase user
   UserData _userFromFirebaseUser(User user) {
-    return user != null ? UserData(uid: user.uid) : null;
+    return user != null ? UserData(uid: user.uid, email: user.email) : null;
   }
 
   //Auth change user stream
@@ -60,6 +59,8 @@ class AuthService {
       //     'Sunny', 12345678, 'Mumbai', 'Not Adopted');
 
       return _userFromFirebaseUser(userval);
+
+
     }
 
     catch(e) {

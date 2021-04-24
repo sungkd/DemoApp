@@ -3,7 +3,6 @@ import 'package:fluuter_provider/home/home.dart';
 import 'package:fluuter_provider/modals/user.dart';
 import 'package:fluuter_provider/screens/authenticate.dart';
 import 'package:provider/provider.dart';
-import 'package:fluuter_provider/screens/app_drawer.dart';
 
 class Wrapper extends StatelessWidget {
   @override
