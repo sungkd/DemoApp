@@ -16,14 +16,14 @@ class _DataListState extends State<DataList> {
    final datalist = Provider.of<List<DispData>>(context) ?? [];
 
    return SafeArea(
-     child: ListView.builder(
-         itemCount: datalist.length,
-         primary: false,
-         shrinkWrap: true,
-         itemBuilder: (context, index) {
-           return DataTile(dbData: datalist[index]);
-         }
-     ),
+       child: ListView.builder(
+           itemCount: datalist.length,
+           primary: false,
+           shrinkWrap: true,
+           itemBuilder: (context, index) {
+             return DataTile(dbData: datalist[index]);
+           }
+       ),
    );
    }
 }

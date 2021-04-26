@@ -194,8 +194,8 @@ class _SignInState extends State<SignIn> {
                 // SizedBox(height: 20),
                 // Center(
                 //   child: Image(
-                //     image: AssetImage('assets/catsleep1.jpg',),
-                //     fit: BoxFit.cover,
+                //     image: AssetImage('assets/catwindow.png',),
+                //     fit: BoxFit.fill,
                 //     width: 200,
                 //     height: 200,
                 //   ),

@@ -53,55 +53,8 @@ class _AuthenticateState extends State<Authenticate> {
           centerTitle: true,
           backgroundColor: Color(0xffFF045C5C),
           //backgroundColor: Colors.grey[800],
-          elevation: 0.0,
-          actions: [
-            // TextButton.icon(
-            //   onPressed: () async {
-            //     await _auth.signOut();
-            //   },
-            //   icon: Icon(LineIcons.alternateSignOut,
-            //       color: Colors.white),
-            //   label: Text('Logout',
-            //       style: TextStyle(color: Colors.white)
-            //   ),
-            // ),
-          ],
+          elevation: 1.2,
         ),
-        // body: CustomScrollView(
-        //   slivers: [
-        //     SliverAppBar(
-        //       elevation: 0,
-        //       actions: [
-        //         TextButton.icon(
-        //           onPressed: () async {
-        //             await _auth.signOut();
-        //           },
-        //           icon: Icon(LineIcons.userSlash),
-        //           label: Text('Logout',
-        //             style: TextStyle(color: Colors.white),
-        //           ),
-        //         )
-        //       ],
-        //       backgroundColor: Color(0xffFF045C5C),
-        //       expandedHeight: 100,
-        //       floating: true,
-        //       flexibleSpace: FlexibleSpaceBar(
-        //         background: Image.asset('assets/catsleep1.jpg',
-        //           fit: BoxFit.cover,),
-        //         collapseMode: CollapseMode.pin,
-        //         title: RichText(
-        //           text: TextSpan(
-        //               text: 'AdoptMe'
-        //           ),
-        //         ),
-        //         centerTitle: true,
-        //       ),
-        //       pinned: true,
-        //     ),
-        //     buildImages(),
-        //   ],
-        //
-        // ),
 
         body: SafeArea(
           child: DataList(),

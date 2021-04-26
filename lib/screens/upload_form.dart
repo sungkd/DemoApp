@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:fluuter_provider/constants/decorate.dart';
 import 'package:fluuter_provider/modals/user.dart';
@@ -23,7 +24,13 @@ class _UploadFormState extends State<UploadForm> {
   String _gender = '';
   String _description = '';
   String _phone = '';
+  String _age = '';
+  String _area = '';
+  String _pin = '';
+  String _days = '';
   String url = '';
+  String _isneutered = 'no';
+  bool _neutered = false;
 
 
   final List<String> petBreed = ['Indie', 'Mixed', 'Pure'];
@@ -36,9 +43,6 @@ class _UploadFormState extends State<UploadForm> {
   File imageFile;
   String fileName = '';
   String _error = '' ;
-
-  double _containerWidth = 380;
-  double _containerHeight = 1000;
 
   Future getImage(String _gallery) async {
 
@@ -67,6 +71,10 @@ class _UploadFormState extends State<UploadForm> {
 
   @override
   Widget build(BuildContext context) {
+
+    double _containerWidth = 380;
+    // double _containerHeight = MediaQuery.of(context).size.height;
+    double _containerHeight = 1500;
 
     final getuser = Provider.of<UserData>(context);
     final CollectionReference petData = FirebaseFirestore.instance.collection('Data');
@@ -147,7 +155,8 @@ class _UploadFormState extends State<UploadForm> {
                       TextFormField(
                         style: TextStyle(color: Colors.black87),
                         decoration: richTextDecoration.copyWith(
-                            labelText: 'Breed',
+                            labelText: 'Mixed/Pure/Indie',
+                            isDense: true,
                         ),
                         validator: (val) => (val.isEmpty) ? 'Field cannot be blank'
                         : (val.toLowerCase() == 'mixed')  ? null
@@ -191,6 +200,112 @@ class _UploadFormState extends State<UploadForm> {
 
 
                       SizedBox(height: 10,),
+                      Row(
+                        children: [
+                          RichText(
+                            textAlign: TextAlign.start,
+                            text: TextSpan(
+                              text: 'Age',
+                              style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 50,),
+                          RichText(
+                            textAlign: TextAlign.start,
+                            text: TextSpan(
+                              text: 'Days',
+                              style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: 10,),
+                      Row(
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 50,
+                            child: TextFormField(
+                              style: TextStyle(color: Colors.black87),
+                              decoration: richTextDecoration.copyWith(
+                                  labelText: '1'
+                              ),
+                              keyboardType: TextInputType.number,
+                              validator: (val) => (val.isEmpty) ? 'Enter approx age'
+                                  : (val.length <= 2) ? null
+                                  : 'Age cannot be greater than 2 digits',
+
+                              onChanged: (val) {
+                                setState(() => _age = val);
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 30,),
+                          Container(
+                            width: 180,
+                            height: 50,
+                            child: TextFormField(
+                              style: TextStyle(color: Colors.black87),
+                              decoration: richTextDecoration.copyWith(
+                                  labelText: 'Week/Month/Year'
+                              ),
+
+                              validator: (val) => (val.isEmpty) ? 'Field cannot be blank'
+                                  : (val.toLowerCase() == 'week')  ? null
+                                  : (val.toLowerCase() == 'month') ? null
+                                  : (val.toLowerCase() == 'year')  ? null
+                                  : 'Age should be in week month or year' ,
+
+                              onChanged: (val) {
+                                setState(() => _days = val);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+
+
+                      SizedBox(height: 10,),
+                      RichText(
+                        textAlign: TextAlign.start,
+                        text: TextSpan(
+                          text: 'Is Neutered',
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 10,),
+                      TextFormField(
+                        style: TextStyle(color: Colors.black87),
+                        decoration: richTextDecoration.copyWith(
+                          labelText: 'Yes/No',
+                          isDense: true,
+                        ),
+                        validator: (val) => (val.isEmpty) ? 'Field cannot be blank'
+                            : (val.toLowerCase() == 'yes')  ? null
+                            : (val.toLowerCase() == 'no')   ? null
+                            : 'Value can be yes or no' ,
+
+                        onChanged: (val) {
+                          setState(() => _isneutered = val);
+                        },
+                      ),
+
+
+                      SizedBox(height: 10,),
                       RichText(
                         textAlign: TextAlign.start,
                         text: TextSpan(
@@ -205,9 +320,10 @@ class _UploadFormState extends State<UploadForm> {
 
                       SizedBox(height: 10,),
                       TextFormField(
+                        maxLines: 5,
                         style: TextStyle(color: Colors.black87),
                         decoration: richTextDecoration.copyWith(
-                            labelText: 'Pet Detail'
+                            labelText: 'Pet Detail',
                         ),
                         validator: (val) => (val.isEmpty) ? 'Enter details'
                         : null,
@@ -274,7 +390,7 @@ class _UploadFormState extends State<UploadForm> {
                       RichText(
                         textAlign: TextAlign.start,
                         text: TextSpan(
-                          text: 'Location',
+                          text: 'City',
                           style: TextStyle(
                               color: Colors.black87,
                               fontSize: 18.0,
@@ -287,15 +403,74 @@ class _UploadFormState extends State<UploadForm> {
                       TextFormField(
                         style: TextStyle(color: Colors.black87),
                         decoration: richTextDecoration.copyWith(
-                            labelText: 'Location',
-                            hintText: 'Bandra,Mumbai',
+                            labelText: 'City',
+                            hintText: 'Mumbai',
                         ),
-                        validator: (val) => (val.isEmpty) ? 'Enter a location'
+                        validator: (val) => (val.isEmpty) ? 'Mention nearest city name'
                         : null,
                         onChanged: (val) {
                           setState(() => _location = val);
                         },
                       ),
+
+                      SizedBox(height: 10,),
+                      RichText(
+                        textAlign: TextAlign.start,
+                        text: TextSpan(
+                          text: 'Area',
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 10,),
+                      TextFormField(
+                        style: TextStyle(color: Colors.black87),
+                        decoration: richTextDecoration.copyWith(
+                          labelText: 'Area',
+                          hintText: '90 Feet Road, Bhandup East',
+                        ),
+                        validator: (val) => (val.isEmpty) ? 'Enter area name'
+                            : null,
+                        onChanged: (val) {
+                          setState(() => _area = val);
+                        },
+                      ),
+
+
+                      SizedBox(height: 10,),
+                      RichText(
+                        textAlign: TextAlign.start,
+                        text: TextSpan(
+                          text: 'Pin code',
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ),
+
+
+                      SizedBox(height: 10,),
+                      TextFormField(
+                        style: TextStyle(color: Colors.black87),
+                        decoration: richTextDecoration.copyWith(
+                          labelText: 'Pin code',
+                          hintText: '400042',
+                        ),
+                        keyboardType: TextInputType.number,
+                        validator: (val) => (val.isEmpty) ? 'Enter pin code'
+                            : (val.length == 6) ? null
+                            : 'Pin code cannot be more than 6 digits',
+                        onChanged: (val) {
+                          setState(() => _pin = val);
+                        },
+                      ),
+
                       SizedBox(height: 20,),
 
                       TextButton(
@@ -320,6 +495,12 @@ class _UploadFormState extends State<UploadForm> {
                                    .ref(fileName).getDownloadURL();
 
                             if (url != null) {
+
+                              _isneutered == 'yes' ?
+                                    _neutered = true
+                                  : _neutered = false;
+
+
                               petData.doc().set( {
                                 'breed': _breed,
                                 'gender': _gender,
@@ -327,6 +508,11 @@ class _UploadFormState extends State<UploadForm> {
                                 'name' : _name,
                                 'phone': int.parse(_phone),
                                 'location': _location,
+                                'age': int.parse(_age),
+                                'days': _days,
+                                'area': _area,
+                                'pin': int.parse(_pin),
+                                'neutered': _neutered,
                                 'status': 'Not Adopted',
                                 'userId': getuser.uid,
                                 'imgUrl': url,
@@ -341,7 +527,7 @@ class _UploadFormState extends State<UploadForm> {
 
                           }
                           else{
-                            _error = 'Attach pet image';
+                            _error = 'Value in all the fields is not entered';
                           }
                         },
                       ),

@@ -75,9 +75,16 @@ class DetailScreen extends StatelessWidget {
                       TextButton(
                         child: Text('Yes'),
                         onPressed: () {
-                          DatabaseService(uid: dbData.uid).updateUserData(dbData.breed,
-                              dbData.gender, dbData.description, dbData.name, dbData.phone,
-                              dbData.location, 'Adopted', dbData.userId,dbData.imgUrl);
+                          // DatabaseService(uid: dbData.uid).
+                          //     updateUserData(dbData.breed, dbData.gender,
+                          //     dbData.description, dbData.name, dbData.phone,
+                          //     dbData.location, dbData.age,dbData.days,
+                          //     dbData.area, dbData.pin,dbData.neutered,
+                          //     'Adopted', dbData.userId,dbData.imgUrl
+                          // );
+
+                          isUpdated = true;
+
                           Navigator.pop(context);
                         },
                       ),
@@ -94,6 +101,11 @@ class DetailScreen extends StatelessWidget {
                   );
                     }
                 );
+                // print('$isUpdated');
+                // isUpdated ? ScaffoldMessenger.of(context)
+                //             .showSnackBar(SnackBar(content: Text('Hello')))
+                // : Container();
+                // isUpdated = false;
               },
               icon: Icon(LineIcons.editAlt, color: Colors.white,),
               label: RichText(
@@ -126,8 +138,10 @@ class DetailScreen extends StatelessWidget {
                 Stack(
                   children: [
                     Container(
-                      margin: EdgeInsets.fromLTRB(0, 10, 0, 100),
-                      padding:EdgeInsets.fromLTRB(0, 120, 0, totSize.height),
+                       margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      padding:EdgeInsets.fromLTRB(0, 120, 0, 0),
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(

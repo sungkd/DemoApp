@@ -93,11 +93,11 @@ class _UpdateFormState extends State<UpdateForm> {
                       ),
                       onPressed: () async {
                         if(_formKey.currentState.validate()) {
-                          await DatabaseService(uid: 'cKd42lbiVMDFfWyW6Buu').updateUserData(
-                              uploadData1.breed, uploadData1.gender, _currentName ?? uploadData1.description,
-                              uploadData1.name, uploadData1.phone, uploadData1.location,
-                              _currentstatus ?? uploadData1.status,
-                              getuser.uid, uploadData1.imgUrl);
+                          // await DatabaseService(uid: 'cKd42lbiVMDFfWyW6Buu').updateUserData(
+                          //     uploadData1.breed, uploadData1.gender, _currentName ?? uploadData1.description,
+                          //     uploadData1.name, uploadData1.phone, uploadData1.location,
+                          //     _currentstatus ?? uploadData1.status,
+                          //     getuser.uid, uploadData1.imgUrl);
                           Navigator.pop(context);
                           Navigator.pop(context);
                         }
