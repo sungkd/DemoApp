@@ -61,20 +61,6 @@ class AboutUs extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 40,),
-              CircularProgressIndicator(
-                backgroundColor: Colors.grey,
-                semanticsLabel: 'Uploading',
-                strokeWidth: 10.0,
-              ),
-              SizedBox(height: 50,),
-              TextButton(onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar
-                  (content: Text('Hello'))
-                );
-              },
-                  child: Text('press'))
-
             ],
           ),
          margin: EdgeInsets.fromLTRB(20, 60, 20, 0),

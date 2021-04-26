@@ -278,7 +278,7 @@ class _UploadFormState extends State<UploadForm> {
                       RichText(
                         textAlign: TextAlign.start,
                         text: TextSpan(
-                          text: 'Is Neutered',
+                          text: 'Neutered or Spayed',
                           style: TextStyle(
                               color: Colors.black87,
                               fontSize: 18.0,
@@ -434,6 +434,7 @@ class _UploadFormState extends State<UploadForm> {
                           hintText: '90 Feet Road, Bhandup East',
                         ),
                         validator: (val) => (val.isEmpty) ? 'Enter area name'
+                            : (val.length <= 45) ? 'Cannot enter more than 45 characters'
                             : null,
                         onChanged: (val) {
                           setState(() => _area = val);
@@ -474,7 +475,7 @@ class _UploadFormState extends State<UploadForm> {
                       SizedBox(height: 20,),
 
                       TextButton(
-                        child: Text('Login',
+                        child: Text('Upload',
                           style: TextStyle(
                               color: Colors.white
                           ),),

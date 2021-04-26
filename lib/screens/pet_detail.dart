@@ -1,6 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluuter_provider/services/database.dart';
+import 'package:fluuter_provider/constants/decorate.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:fluuter_provider/modals/fetchdata.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,6 +14,7 @@ class DetailScreen extends StatelessWidget {
   final DispData dbData;
   DetailScreen({this.dbData});
 
+  //Function to launch phone dialer
   void _launchCaller(int number) async {
     var url = "tel:${number.toString()}";
     if(await canLaunch(url)) {
@@ -30,289 +32,242 @@ class DetailScreen extends StatelessWidget {
     
     final totSize = MediaQuery.of(context).size;
     final getuser = Provider.of<UserData>(context);
-    bool isUpdated = false;
+
+    String _neutered = '';
+
+    if (dbData.neutered.toString().toLowerCase() == 'true') {
+      if(dbData.gender.toLowerCase() == 'male') {
+        _neutered = 'Neutered';
+      }
+      else
+        {
+          _neutered = 'Spayed';
+        }
+    }
+    else
+      {
+        _neutered = 'Not Neutered';
+      }
 
     return Scaffold(
-      backgroundColor: Color(0xff416d6d),
-      appBar: AppBar(
-        backgroundColor: Color(0xff416d6d),
-        title: RichText(
-          text: TextSpan(
-            text: 'Details',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18.0,
-              letterSpacing: 1.0,
+      body: Stack(
+        children: [
+          // Grey and White Background
+          Positioned.fill(
+              child: Column(
+                children: [
+                  Expanded(
+                      child: Container(color: Colors.blueGrey[300],)
+                  ),
+                  Expanded(child: Container(color: Colors.white,))
+                ],
+              )
+          ),
+
+          // Top of App
+          Container(
+            margin: EdgeInsets.only(top: 65),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Row(
+                children: [
+                  IconButton(icon: Icon(Icons.arrow_back_ios),
+                    onPressed: () { Navigator.pop(context); }
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(LineIcons.angleLeft,
-          color: Colors.white,
+
+          //Image of pet
+          Container(
+            padding: EdgeInsets.fromLTRB(10, 80, 10, 0),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15.0),
+                child: CachedNetworkImage(
+                  placeholder: (context, url) => CircularProgressIndicator(
+                    backgroundColor: Colors.grey[600], 
+                    strokeWidth: 2,
+                  ),
+                  imageUrl: dbData.imgUrl,
+                  fit: BoxFit.cover,
+                  width: 300,
+                  height: 270,
+                ),
+              ),
+            ),
           ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        actions: [
-          (getuser.uid == dbData.userId) ? TextButton.icon(
-              onPressed: () {
-                showDialog(context: context,
-                    builder: (context) {
-                  return AlertDialog(
-                    title: RichText(
-                      text: TextSpan(
-                          text: 'Update Status',
-                          style: TextStyle(color: Colors.white,
-                          fontSize: 20.0)
-                      ),
-                    ),
-                    content: RichText(
-                      text: TextSpan(
-                          text: 'Change status to Adopted?'
-                      ),
-                    ),
-                    actions: [
-                      TextButton(
-                        child: Text('Yes'),
-                        onPressed: () {
-                          // DatabaseService(uid: dbData.uid).
-                          //     updateUserData(dbData.breed, dbData.gender,
-                          //     dbData.description, dbData.name, dbData.phone,
-                          //     dbData.location, dbData.age,dbData.days,
-                          //     dbData.area, dbData.pin,dbData.neutered,
-                          //     'Adopted', dbData.userId,dbData.imgUrl
-                          // );
 
-                          isUpdated = true;
+          /*Breed Gender,Location,Age Container*/
+          Align(
+            child: Container(
+              height: 150,
+              margin: EdgeInsets.fromLTRB(10,100,10,0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: shadowList,
+                borderRadius: BorderRadius.circular(20)
+              ),
+              child: Container(
+                padding: EdgeInsets.fromLTRB(10,20,10, 0),
+                child: Column(
+                  children: [
+                    //Breed and Gender
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        RichText(text: TextSpan(
+                            text: dbData.breed,
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 20.0,
+                            )
+                        )
+                        ),
+                        (dbData.gender.toLowerCase() == 'male') ?
+                          Icon(LineIcons.mars, size: 25.0,
+                          color: Colors.red[600],)
+                        : Icon(LineIcons.venus, size: 25.0,
+                               color: Colors.pink[600],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10,),
 
-                          Navigator.pop(context);
-                        },
-                      ),
-                      TextButton(
-                        child: Text('No'),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
+                    //Neutered and Age
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        RichText(text: TextSpan(
+                                 text: _neutered,
+                                 style: TextStyle(
+                                 color: Colors.grey[600], fontSize: 15.0,))
+                            ),
+
+                        RichText(text: TextSpan(text: dbData.age.toString()
+                            + ' ' + dbData.days,
+                            style: TextStyle(
+                              color: Colors.grey[600], fontSize: 15.0,))
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10,),
+
+                    //Area
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(LineIcons.mapMarker, color: Colors.red[800],
+                        size: 15,),
+                        SizedBox(width: 3,),
+                        Wrap(
+                          direction: Axis.horizontal,
+                          children: [
+                            RichText(text: TextSpan(
+                                text: dbData.area,
+                                style: TextStyle(
+                                  color: Colors.grey[600], fontSize: 15.0,))
+                            ),
+                          ]
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10,),
+
+                    //Location and Pin Code
+                    Row(
+                      children: [
+                        SizedBox(width: 5,),
+                        RichText(
+                          text: TextSpan(
+                            text: dbData.location + ' - ' +
+                                  dbData.pin.toString(),
+                          style: TextStyle(
+                            color: Colors.grey[600], fontSize: 15.0,
+                          ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          /*Middle Section to display Description*/
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              padding: EdgeInsets.fromLTRB(15, 530, 15, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Wrap(
+                    direction: Axis.horizontal,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          text: dbData.description,
+                          style: TextStyle(fontSize: 15.0, letterSpacing: 1.0,
+                                  wordSpacing: 1.0, color: Colors.black87) ,
+                        )
                       ),
                     ],
-                    shape: RoundedRectangleBorder(),
-                    elevation: 24.0,
-                    backgroundColor: Colors.black87,
-                  );
-                    }
-                );
-                // print('$isUpdated');
-                // isUpdated ? ScaffoldMessenger.of(context)
-                //             .showSnackBar(SnackBar(content: Text('Hello')))
-                // : Container();
-                // isUpdated = false;
-              },
-              icon: Icon(LineIcons.editAlt, color: Colors.white,),
-              label: RichText(
-                text: TextSpan(
-                  text: 'Status'
-                ),
-              )
-          ) : IconButton(
-              icon: Icon(LineIcons.timesCircle,
-              color: Colors.white,
+                  ),
+                ],
               ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-      ),
-        ],
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-            child: Column(
-              children: [
-                CircleAvatar(
-                  // backgroundImage: AssetImage('assets/cat2.jpg'),
-                  backgroundImage: NetworkImage(dbData.imgUrl),
-                  radius: 120.0,
-                ),
-                Stack(
+            ),
+          ),
+
+
+          /*Bottom Container*/
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: 70,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(30),
+                    topLeft: Radius.circular(30)),
+              ),
+              child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                       margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      padding:EdgeInsets.fromLTRB(0, 120, 0, 0),
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(24),
-                          topRight: Radius.circular(24),
+                    Expanded(
+                      child: Container(
+                        height: 60,
+                        decoration: BoxDecoration(color: Colors.teal[900],
+                        borderRadius: BorderRadius.circular(20)
+                        ),
+                        child: Center(
+                          child: TextButton.icon(
+                              onPressed: () {
+                                _launchCaller(dbData.phone);
+                              },
+                              icon: Icon(LineIcons.phone,
+                              color: Colors.white,),
+                              label: RichText(
+                                text: TextSpan(text: dbData.name,
+                                  style: TextStyle(color: Colors.white,
+                                    fontSize: 18.0,),),
+                                ),
+                          ),
                         ),
                       ),
                     ),
-                   Column(
-                     children: [
-                       Row(
-                         children: [
-                           Expanded(
-                               child: Padding(
-                                 padding: const EdgeInsets.fromLTRB(25, 30, 0, 0),
-                                 child: Column(
-                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                   children: [
-                                     Text('Breed',
-                                     style: TextStyle(
-                                       fontSize: 20.0,
-                                       letterSpacing: 1.0,
-                                       fontWeight: FontWeight.bold,
-                                     ),),
-                                     Row(
-                                       children: [
-                                         Text(dbData.breed,
-                                         style: TextStyle(
-                                           fontSize: 18.0,
-                                           letterSpacing: 1.0,
-                                           wordSpacing: 1.0,
-                                         ),),
-                                         SizedBox(width: 250,),
-                                         (dbData.gender == 'male') ?
-                                         Icon(LineIcons.mars,
-                                         size: 35.0,
-                                         color: Colors.red,) :
-                                         Icon(LineIcons.venus,
-                                         size: 35.0,
-                                         color: Colors.pink,),
-                                       ],
-                                     ),
-                                     SizedBox(height: 20,),
-                                     Column(
-                                       crossAxisAlignment: CrossAxisAlignment.start,
-                                       children: [
-                                         Text('Description',
-                                           style: TextStyle(
-                                             fontSize: 20.0,
-                                             letterSpacing: 1.0,
-                                             fontWeight: FontWeight.bold,
-                                           ),
-                                         ),
-                                         SizedBox(height: 5),
-                                         Wrap(
-                                           direction: Axis.horizontal,
-                                           children: [
-                                              Text(dbData.description,
-                                                   style: TextStyle(
-                                                   fontSize: 15.0,
-                                                   letterSpacing: 1.0,
-                                                   wordSpacing: 1.0,),
-                                              ),
-                                           ],
-                                         ),
-                                       ],
-                                     ),
-                                     SizedBox(height: 20,),
-                                     Column(
-                                       crossAxisAlignment: CrossAxisAlignment.start,
-                                       children: [
-                                         Text('Status',
-                                           style: TextStyle(
-                                             fontSize: 20.0,
-                                             letterSpacing: 1.0,
-                                             fontWeight: FontWeight.bold,
-                                           ),
-                                         ),
-                                         SizedBox(height: 5,),
-                                         Row(
-                                           children: [
-                                             Text(isUpdated ? 'Adopted'
-                                               : dbData.status,
-                                               style: TextStyle(
-                                                 fontSize: 18.0,
-                                                 letterSpacing: 1.0,
-                                                 wordSpacing: 1.0,
-                                               ),
-                                             ),
-                                           ],
-                                         ),
-
-                                       ],
-                                     ),
-                                     SizedBox(height: 20,),
-                                     Column(
-                                       crossAxisAlignment: CrossAxisAlignment.start,
-                                       children: [
-                                         Text('Contact',
-                                           style: TextStyle(
-                                             fontSize: 20.0,
-                                             letterSpacing: 1.0,
-                                             fontWeight: FontWeight.bold,
-                                           ),
-                                         ),
-                                         SizedBox(height: 5,),
-                                         Row(
-                                           children: [
-                                             Text(dbData.name,
-                                               style: TextStyle(
-                                                 fontSize: 18.0,
-                                                 letterSpacing: 1.0,
-                                                 wordSpacing: 1.0,
-                                               ),),
-                                           ],
-                                         ),
-
-                                       ],
-                                     ),
-                                     SizedBox(height: 20),
-                                     Column(
-                                       crossAxisAlignment: CrossAxisAlignment.start,
-                                       children: [
-                                         Row(
-                                           children: [
-                                             Icon(LineIcons.mapMarker,
-                                               size: 25.0,
-                                               color: Colors.red,),
-                                             Wrap(direction: Axis.horizontal,
-                                                 children: [Text(dbData.location)]
-                                             ),
-
-                                           ],
-                                         )
-                                       ],
-                                     ),
-                                     SizedBox(height: 20,),
-                                     Column(
-                                       crossAxisAlignment: CrossAxisAlignment.start,
-                                       children: [
-                                         Row(
-                                           children: [
-                                             ElevatedButton(
-                                                 onPressed: () {
-                                                   _launchCaller(dbData.phone);
-                                                 },
-                                                 child: Icon(LineIcons.phone,
-                                                 size: 25.0,
-                                                 color: Colors.white,),
-                                                style: ButtonStyle(
-                                                backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
-                                                foregroundColor:  MaterialStateProperty.all<Color>(Colors.white),
-                                                ),),
-                                           ],
-                                         ),
-                                       ],
-                                     ),
-                                   ],
-                                 ),
-                               ),
-                           ),
-                         ],
-                       ),
-                     ],
-                   ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
-      ),
+        ],
       ),
     );
   }

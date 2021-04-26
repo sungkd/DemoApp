@@ -1,8 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluuter_provider/constants/decorate.dart';
 import 'package:fluuter_provider/modals/fetchdata.dart';
+import 'package:fluuter_provider/modals/user.dart';
 import 'package:fluuter_provider/screens/pet_detail.dart';
+import 'package:fluuter_provider/services/database.dart';
+import 'package:provider/provider.dart';
 
 class DataTile extends StatelessWidget {
 
@@ -14,15 +18,19 @@ class DataTile extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final double _radius = 16;
+    final double _width = MediaQuery.of(context).size.width;
 
-    double _screenWidth = MediaQuery.of(context).size.width;
-    double _screenHeight = MediaQuery.of(context).size.height;
+    final getuser = Provider.of<UserData>(context);
 
-    final cachedImage = new CachedNetworkImage(
-      // placeholder: (context, url) => CircularProgressIndicator(),
-      imageUrl: dbData.imgUrl,
+    final _formKey = GlobalKey<FormState>();
 
-    );
+    String _description = '';
+    String _name = '';
+    String _area = '';
+    String _phone = '';
+    String _pin = '';
+    String _status = '' ;
+    String _location = '';
 
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
@@ -43,21 +51,343 @@ class DataTile extends StatelessWidget {
                    BorderRadius.circular(18.0),),
             elevation: 10.0,
             margin: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 0),
-            child: Row(
+            child: Column(
               children: [
-                Expanded(child: buildText(dbData.status,dbData.breed)),
-                // GestureDetector(child: Expanded(child:
-                // buildText(dbData.status,dbData.breed),),
-                // onTap: () {
-                //   dbData.status == 'Not Adopted' ?
-                //       Navigator.push(context, MaterialPageRoute(
-                //           builder: (context) => DetailScreen(dbData: dbData),
-                //       )
-                //       ) : ScaffoldMessenger.of(context).showSnackBar(SnackBar
-                //           (content: Text('Pet Adopted')));
-                // },),
-                //Spacer(),
-                buildImage(_radius, dbData.imgUrl),
+                Row(
+                  children: [
+                    Expanded(child: buildText(dbData.status,dbData.breed)),
+                    buildImage(_radius, dbData.imgUrl),
+                  ],
+                ),
+                dbData.userId == getuser.uid ? TextButton(
+                    onPressed: () {
+                     dbData.status == 'Not Adopted' ?
+                      showModalBottomSheet(
+                        enableDrag: true,
+                        isScrollControlled: true,
+                        context: context, builder: (context) {
+                          //Modify Data
+                          return SingleChildScrollView(
+                            child: Container(
+                              margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                              padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
+                              child: Form(
+                                key: _formKey,
+                                child: Column(
+                                  children: [
+                                    Text('Modify Details',
+                                      style: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: 20.0,
+                                      ),
+                                    ),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        //Details
+                                        SizedBox(height: 10,),
+                                        RichText(
+                                          textAlign: TextAlign.start,
+                                          text: TextSpan(
+                                            text: 'Details',
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold
+                                            ),
+                                          ),
+                                        ),
+
+                                        SizedBox(height: 10,),
+                                        TextFormField(
+                                          initialValue: dbData.description,
+                                          maxLines: 5,
+                                          style: TextStyle(color: Colors.black87),
+                                          decoration: richTextDecoration.copyWith(
+                                            labelText: 'Pet Detail',
+                                          ),
+                                          validator: (val) => (val.isEmpty) ? 'Enter details'
+                                              : null,
+                                          onChanged: (val) {
+                                            _description = val;
+                                          },
+                                        ),
+
+                                        //Contact Person
+                                        SizedBox(height: 10,),
+                                        RichText(
+                                          textAlign: TextAlign.start,
+                                          text: TextSpan(
+                                            text: 'Contact Person',
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold
+                                            ),
+                                          ),
+                                        ),
+
+                                        SizedBox(height: 10,),
+                                        TextFormField(
+                                          initialValue: dbData.name,
+                                          style: TextStyle(color: Colors.black87),
+                                          decoration: richTextDecoration.copyWith(
+                                            labelText: 'Name',
+                                            isDense: true,
+                                          ),
+                                          validator: (val) => (val.isEmpty) ? 'Enter name'
+                                              : null,
+                                          onChanged: (val) {
+                                            _name = val;
+                                          },
+                                        ),
+
+                                        //Phone
+                                        SizedBox(height: 10,),
+                                        RichText(
+                                          textAlign: TextAlign.start,
+                                          text: TextSpan(
+                                            text: 'Phone',
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold
+                                            ),
+                                          ),
+                                        ),
+
+                                        SizedBox(height: 10,),
+                                        TextFormField(
+                                          initialValue: dbData.phone.toString(),
+                                          style: TextStyle(color: Colors.black87),
+                                          decoration: richTextDecoration.copyWith(
+                                              labelText: 'Phone number',
+                                              isDense: true
+                                          ),
+                                          keyboardType: TextInputType.number,
+                                          validator: (val) => (val.isEmpty) ? 'Enter phone number'
+                                              : (val.length == 10) ? null : 'Phone number should be of 10 digits',
+                                          onChanged: (val) {
+                                            _phone = val;
+                                          },
+                                        ),
+
+                                        //City
+                                        SizedBox(height: 10,),
+                                        RichText(
+                                          textAlign: TextAlign.start,
+                                          text: TextSpan(
+                                            text: 'City',
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold
+                                            ),
+                                          ),
+                                        ),
+
+                                        SizedBox(height: 10,),
+                                        TextFormField(
+                                          initialValue: dbData.location,
+                                          style: TextStyle(color: Colors.black87),
+                                          decoration: richTextDecoration.copyWith(
+                                              labelText: 'City',
+                                              hintText: 'Mumbai',
+                                              isDense: true
+                                          ),
+                                          validator: (val) => (val.isEmpty)
+                                              ? 'Mention nearest city name'
+                                              : null,
+                                          onChanged: (val) {
+                                            _location = val;
+                                          },
+                                        ),
+
+                                        //Area
+                                        SizedBox(height: 10,),
+                                        RichText(
+                                          textAlign: TextAlign.start,
+                                          text: TextSpan(
+                                            text: 'Area',
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold
+                                            ),
+                                          ),
+                                        ),
+
+                                        SizedBox(height: 10,),
+                                        TextFormField(
+                                          initialValue: dbData.area,
+                                          style: TextStyle(color: Colors.black87),
+                                          decoration: richTextDecoration.copyWith(
+                                              labelText: 'Area',
+                                              hintText: '90 Feet Road, Bhandup East',
+                                              isDense: true
+                                          ),
+                                          validator: (val) => (val.isEmpty) ? 'Enter area name'
+                                              : (val.length <= 45) ? 'Cannot enter more than 45 characters'
+                                              : null,
+                                          onChanged: (val) {
+                                            _area = val;
+                                          },
+                                        ),
+
+                                        //Pin Code
+                                        SizedBox(height: 10,),
+                                        RichText(
+                                          textAlign: TextAlign.start,
+                                          text: TextSpan(
+                                            text: 'Pin code',
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold
+                                            ),
+                                          ),
+                                        ),
+
+
+                                        SizedBox(height: 10,),
+                                        TextFormField(
+                                          initialValue: dbData.pin.toString(),
+                                          style: TextStyle(color: Colors.black87),
+                                          decoration: richTextDecoration.copyWith(
+                                              labelText: 'Pin code',
+                                              hintText: '400042',
+                                              isDense: true
+                                          ),
+                                          keyboardType: TextInputType.number,
+                                          validator: (val) => (val.isEmpty) ? 'Enter pin code'
+                                              : (val.length == 6) ? null
+                                              : 'Pin code cannot be more than 6 digits',
+                                          onChanged: (val) {
+                                            _pin = val;
+                                          },
+                                        ),
+
+                                        //Adoption Status
+                                        SizedBox(height: 10,),
+                                        RichText(
+                                          textAlign: TextAlign.start,
+                                          text: TextSpan(
+                                            text: 'Adoption Status',
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold
+                                            ),
+                                          ),
+                                        ),
+
+                                        SizedBox(height: 10,),
+                                        TextFormField(
+                                          initialValue: dbData.status,
+                                          style: TextStyle(color: Colors.black87),
+                                          decoration: richTextDecoration.copyWith(
+                                              labelText: 'Status',
+                                              hintText: 'Adopted/ Not Adopted',
+                                              isDense: true
+                                          ),
+                                          validator: (val) => (val.isEmpty)
+                                              ? 'Enter adoption status'
+                                              : (val.toLowerCase() == 'not adopted')
+                                              ? null
+                                              : (val.toLowerCase() == 'adopted')
+                                              ? null
+                                              : 'Value can be adopted or not adopted',
+                                          onChanged: (val) {
+                                            _status = val;
+                                          },
+                                        ),
+
+                                        SizedBox(height: 10,),
+                                        TextButton(
+                                          child: Text('Update',
+                                            style: TextStyle(
+                                                color: Colors.white
+                                            ),),
+                                          style: textButtonStyle,
+                                          onPressed: () {
+                                            if(_formKey.currentState.validate()) {
+
+                                              if (_description.isEmpty) {
+                                                _description = dbData.description;
+                                              }
+
+                                              if (_name.isEmpty) {
+                                                _name = dbData.name;
+                                              }
+
+                                              if (_phone.isEmpty) {
+                                                _phone = dbData.phone.toString();
+                                              }
+
+                                              if (_location.isEmpty) {
+                                                _location = dbData.location;
+                                              }
+
+                                              if (_area.isEmpty) {
+                                                _area = dbData.area;
+                                              }
+
+                                              if (_pin.isEmpty) {
+                                                _pin = dbData.pin.toString();
+                                              }
+
+                                              if (_status.isEmpty) {
+                                                _status = dbData.status;
+                                              }
+
+                                              print('$_status - $_description');
+
+                                              DatabaseService(uid: dbData.uid).
+                                                  updateUserData(dbData.breed, dbData.gender,
+                                                  _description, _name, int.parse(_phone),
+                                                  _location, dbData.age,dbData.days,
+                                                  _area, int.parse(_pin),dbData.neutered,
+                                                  _status, dbData.userId,dbData.imgUrl
+                                              );
+
+
+                                              Navigator.pop(context);
+
+                                            }
+
+                                          },
+                                        ),
+
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                      }
+                      ) : ScaffoldMessenger.of(context).showSnackBar(SnackBar
+                       (content: Text('Pet Adopted')));
+                    } ,
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.grey[300],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16)
+                      ),
+                      minimumSize: Size(_width,60),
+                    ),
+                    child: RichText(
+                      text: TextSpan(
+                        text: dbData.status == 'Not Adopted' ? 'Update'
+                              : 'Adopted',
+                        style: TextStyle(
+                          color: Colors.teal[900],
+                          letterSpacing: 1.0,
+                          fontSize: 16
+                        ),
+                      ),
+                    ),
+                ) : Container(),
               ],
             ),
             // child: ListTile(
@@ -153,4 +483,5 @@ class DataTile extends StatelessWidget {
         ),
 
       );
+
 }

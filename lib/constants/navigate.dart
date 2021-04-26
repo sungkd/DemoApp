@@ -33,86 +33,101 @@ class NavigationDrawer extends StatelessWidget {
       child: Drawer(
         child: Material(
           color: Colors.teal[700],
-          child: ListView(
-            padding: _padding,
-            children: [
-               buildHeader(
-                name: getuser.email,
-              ),
-              const SizedBox(height: 20,),
-              buildMenuItems(
-                text: 'Home',
-                icon: LineIcons.home,
-                onClicked: () => selectedItem(context,0),
-              ),
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            child: ListView(
+              padding: _padding,
+              children: [
+                 buildHeader(
+                  name: getuser.email,
+                ),
+                const SizedBox(height: 20,),
+                buildMenuItems(
+                  text: 'Home',
+                  icon: LineIcons.home,
+                  onClicked: () => selectedItem(context,0),
+                ),
 
-              buildMenuItems(
-                text: 'Upload Form',
-                icon:  LineIcons.alternateCloudUpload,
-                onClicked: () => selectedItem(context,1),
-              ),
+                buildMenuItems(
+                  text: 'Upload Form',
+                  icon:  LineIcons.alternateCloudUpload,
+                  onClicked: () => selectedItem(context,1),
+                ),
 
-              buildMenuItems(
-                text: 'About',
-                icon: LineIcons.infoCircle,
-                onClicked: () => selectedItem(context,2),
-              ),
+                buildMenuItems(
+                  text: 'Vets Info',
+                  icon:  LineIcons.hospitalSymbol,
+                  onClicked: () async {
+                    AndroidIntent intent = AndroidIntent(
+                        action: "action_view",
+                        data: 'https://vetsinindia.blogspot.com/'
+                    );
+                    await intent.launch();
+                  },
+                ),
 
-              buildMenuItems(
-                text: 'Feedback',
-                icon: LineIcons.envelopeAlt,
-                onClicked: () {
-                  _sendEmail();
-                }
-              ),
+                buildMenuItems(
+                  text: 'Animal Welfare Organisation',
+                  icon:  LineIcons.medkit,
+                  onClicked: () async {
+                    AndroidIntent intent = AndroidIntent(
+                        action: "action_view",
+                        data: 'http://animalwelfareorganisations.blogspot.com/'
+                    );
+                    await intent.launch();
+                  },
+                ),
 
 
-              buildMenuItems(
-                text: 'Logout',
-                icon: LineIcons.alternateSignOut,
-                onClicked: () async {
-                  await _auth.signOut();
-                }
-              ),
-              SizedBox(height: 165,),
-              Row(
-                children: [
-                  // RichText(
-                  //   text: TextSpan(
-                  //     text: 'Developed by Sunny!',
-                  //     style: TextStyle(
-                  //       color: Colors.white,
-                  //       letterSpacing: 1.0,
-                  //     ),
-                  //   ),
-                  // ),
-                ],
-              ),
-              Divider(
-                color: Colors.teal[500],
-                height: 10.0,
-                thickness: 1,
-              ),
-              SizedBox(height: 8,),
-              Row(
-                children: [
-                  Icon(LineIcons.copyrightAlt,
-                    color: Colors.white,
-                    size: 18,),
-                  SizedBox(width: 10,),
-                  RichText(
-                    text: TextSpan(
-                      text: '2021 All Rights Reserved!',
-                      style: TextStyle(
-                        color: Colors.white,
-                        letterSpacing: 1.0,
-                        fontSize: 12,
+                buildMenuItems(
+                  text: 'About',
+                  icon: LineIcons.infoCircle,
+                  onClicked: () => selectedItem(context,2),
+                ),
+
+                buildMenuItems(
+                  text: 'Feedback',
+                  icon: LineIcons.envelopeAlt,
+                  onClicked: () {
+                    _sendEmail();
+                  }
+                ),
+
+
+                buildMenuItems(
+                  text: 'Logout',
+                  icon: LineIcons.alternateSignOut,
+                  onClicked: () async {
+                    await _auth.signOut();
+                  }
+                ),
+                SizedBox(height: 30,),
+                Divider(
+                  color: Colors.teal[500],
+                  height: 10.0,
+                  thickness: 1,
+                ),
+                SizedBox(height: 8,),
+                Row(
+                  children: [
+                    Icon(LineIcons.copyrightAlt,
+                      color: Colors.white,
+                      size: 18,),
+                    SizedBox(width: 10,),
+                    RichText(
+                      text: TextSpan(
+                        text: '2021 All Rights Reserved!',
+                        style: TextStyle(
+                          color: Colors.white,
+                          letterSpacing: 1.0,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -190,6 +205,7 @@ class NavigationDrawer extends StatelessWidget {
         )
         );
         break;
+
       case 2:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => AboutUs(),

@@ -39,3 +39,7 @@ import 'package:flutter/material.dart';
      shadowColor: Colors.black,
      minimumSize: Size(350,50)
  );
+
+List<BoxShadow> shadowList = [
+  BoxShadow(color: Colors.grey[300], blurRadius: 30, offset: Offset(0, 20))
+];
