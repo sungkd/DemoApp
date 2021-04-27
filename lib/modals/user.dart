@@ -23,11 +23,13 @@ class UploadData1 {
   final bool neutered;
   final dynamic userId;
   final dynamic imgUrl;
+  final dynamic imgUrl1;
+  final dynamic imgUrl2;
 
   //UploadData1({this.uid, this.breed,this.gender,this.description,this.name,this.phone,
   UploadData1({this.uid, this.breed,this.gender,this.description,this.name,this.phone,
     this.location, this.age, this.days, this.area, this.pin, this.neutered,
-    this.status, this.userId, this.imgUrl});
+    this.status, this.userId, this.imgUrl, this.imgUrl1, this.imgUrl2});
 }
 
 
@@ -39,10 +41,13 @@ class GetUidOfDocument {
   final dynamic userId;
   final dynamic uid;
   final dynamic imgUrl;
+  final dynamic imgUrl1;
+  final dynamic imgUrl2;
 
 
   GetUidOfDocument({this.breed, this.gender, this.description, this.name,
     this.location, this.status, this.phone, this.age, this.days,this.area,
-    this.pin,this.neutered, this.userId, this.uid, this.imgUrl});
+    this.pin,this.neutered, this.userId, this.uid, this.imgUrl,
+    this.imgUrl1,this.imgUrl2});
 
 }

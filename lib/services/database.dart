@@ -13,7 +13,8 @@ class DatabaseService {
   Future updateUserData(String breed, String gender, String description,
       String name,  int phone,  String location, int age,
       String days, String area, int pin, bool neutered,
-      String status, dynamic userId, String url) async
+      String status, dynamic userId,
+      String url, String url1, String url2) async
   {
 
     return await petData.doc(uid).set(
@@ -32,6 +33,8 @@ class DatabaseService {
           'status': status,
           'userId': userId,
           'imgUrl': url,
+          'imgUrl1': url1,
+          'imgUrl2': url2,
         }
     );
   }
@@ -55,6 +58,8 @@ class DatabaseService {
         userId: doc.data()['userId'] ?? '',
         uid: doc.id ?? '',
         imgUrl: doc.data()['imgUrl'] ?? '',
+        imgUrl1: doc.data()['imgUrl1'] ?? '',
+        imgUrl2: doc.data()['imgUrl2'] ?? '',
 
       );
     }).toList();
@@ -78,6 +83,8 @@ class DatabaseService {
       status: snapshot.data()['status'] ,
       userId: snapshot.data()['userId'] ,
       imgUrl: snapshot.data()['imgUrl'] ,
+      imgUrl1: snapshot.data()['imgUrl1'] ,
+      imgUrl2: snapshot.data()['imgUrl2'] ,
 
     );
   }
@@ -119,6 +126,8 @@ class ProcessUid {
       userId: snapshot.data()['userId'] ,
       uid: snapshot.id,
       imgUrl: snapshot.data()['imgUrl'] ,
+      imgUrl1: snapshot.data()['imgUrl1'] ,
+      imgUrl2: snapshot.data()['imgUrl2'] ,
 
     );
   }

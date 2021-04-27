@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:fluuter_provider/constants/decorate.dart';
 import 'package:fluuter_provider/modals/user.dart';
 import 'package:provider/provider.dart';
@@ -29,8 +28,11 @@ class _UploadFormState extends State<UploadForm> {
   String _pin = '';
   String _days = '';
   String url = '';
-  String _isneutered = 'no';
-  bool _neutered = false;
+  String url1 = '';
+  String url2 = '';
+
+  String _neutered = 'no';
+  bool _isNeutered = false;
 
 
   final List<String> petBreed = ['Indie', 'Mixed', 'Pure'];
@@ -40,11 +42,20 @@ class _UploadFormState extends State<UploadForm> {
 
   PickedFile pickedImage;
   File _image;
+  File _image1;
+  File _image2;
   File imageFile;
+  File imageFile1;
+  File imageFile2;
+
   String fileName = '';
+  String fileName1 = '';
+  String fileName2 = '';
   String _error = '' ;
 
-  Future getImage(String _gallery) async {
+  bool _isUploading = false;
+
+  Future getImage(String _gallery, int _number) async {
 
 
     final picker = ImagePicker();
@@ -52,21 +63,63 @@ class _UploadFormState extends State<UploadForm> {
     if(_gallery == 'gallery') {
       pickedImage = await picker.getImage(source: ImageSource.gallery);
     }
-     fileName = path.basename(pickedImage.path);
-     imageFile = File(pickedImage.path);
 
-    setState(() {
-      _image = imageFile;
+    switch(_number) {
+      case 0:
+        fileName = path.basename(pickedImage.path);
+        imageFile = File(pickedImage.path);
 
-    });
-    print('$fileName');
-    print('$imageFile');
+        setState(() {
+          _image = imageFile;
+
+        });
+        break;
+
+      case 1:
+        fileName1 = path.basename(pickedImage.path);
+        imageFile1 = File(pickedImage.path);
+
+        setState(() {
+          _image1 = imageFile1;
+
+        });
+        break;
+
+      case 2:
+        fileName2 = path.basename(pickedImage.path);
+        imageFile2 = File(pickedImage.path);
+
+        setState(() {
+          _image2 = imageFile2;
+
+        });
+        break;
+    }
+
+    print('Filename - $fileName - $fileName1 - $fileName2');
+    print('ImgFile - $imageFile - $imageFile1 - $imageFile2');
 
   }
 
-  getImageURL({String name}) async {
-    url  = await FirebaseStorage.instance.ref(fileName).getDownloadURL();
-    print('$url');
+  getImageURL({String name, int number}) async {
+
+    switch(number) {
+      case 0:
+        url  = await FirebaseStorage.instance.ref(fileName).getDownloadURL();
+        print('$url');
+
+        break;
+
+      case 1:
+        url1  = await FirebaseStorage.instance.ref(fileName1).getDownloadURL();
+        print('$url1');
+        break;
+
+      case 2:
+        url2  = await FirebaseStorage.instance.ref(fileName2).getDownloadURL();
+        print('$url2');
+        break;
+    }
   }
 
   @override
@@ -74,7 +127,7 @@ class _UploadFormState extends State<UploadForm> {
 
     double _containerWidth = 380;
     // double _containerHeight = MediaQuery.of(context).size.height;
-    double _containerHeight = 1500;
+    double _containerHeight = 2000;
 
     final getuser = Provider.of<UserData>(context);
     final CollectionReference petData = FirebaseFirestore.instance.collection('Data');
@@ -101,7 +154,7 @@ class _UploadFormState extends State<UploadForm> {
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: Column(
             children: [
               Container(
@@ -110,36 +163,80 @@ class _UploadFormState extends State<UploadForm> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                        Container(
-                            child: _image == null ? InkResponse(
-                              onTap: () {
+                      Container(
+                        alignment: Alignment.topLeft,
+                        padding: EdgeInsets.all(35),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          color: Colors.grey[200],
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _image == null ? Container(
+                                  child: InkResponse(
+                                    onTap:  () {
+                                      //Select image from gallery
+                                      getImage('gallery', 0);
+                                    },
+                                    child: Icon(Icons.flip_camera_ios,
+                                    size: 20,
+                                    color: Colors.black,),
+                                  ),
+                                ) : Container(
+                                  child: InkResponse(
+                                    onTap: () {
+                                      //Select image from gallery
+                                      getImage('gallery', 0);
+                                    },
+                                    child: CircleAvatar(
+                                        backgroundImage: FileImage(_image, scale: 1),
+                                        radius: 50),
+                                  ),
+                                ),
+
+                                _image1 == null ? InkResponse(
+                                  onTap:  () {
+                                    //Select image from gallery
+                                    getImage('gallery', 1);
+                                  },
+                                  child: Icon(Icons.flip_camera_ios,
+                                    size: 20,
+                                    color: Colors.black,),
+                                ) : InkResponse(
+                                  onTap: () {
+                                    //Select image from gallery
+                                    getImage('gallery', 1);
+                                  },
+                                  child: CircleAvatar(
+                                      backgroundImage: FileImage(_image1, scale: 1),
+                                      radius: 50),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 40,),
+                            _image2 == null ? InkResponse(
+                              onTap:  () {
                                 //Select image from gallery
-                                getImage('gallery');
+                                getImage('gallery', 2);
                               },
-                              child: Icon(LineIcons.camera,
-                                          size: 50,),
+                              child: Icon(Icons.flip_camera_ios,
+                                size: 20,
+                                color: Colors.black,),
                             ) : InkResponse(
                               onTap: () {
                                 //Select image from gallery
-                                getImage('gallery');
+                                getImage('gallery', 2);
                               },
                               child: CircleAvatar(
-                                backgroundImage: FileImage(_image,
-                                scale: 1),
-                                radius: 70,
-                              ),
+                                  backgroundImage: FileImage(_image2, scale: 1),
+                                  radius: 50),
                             ),
-                            alignment: Alignment.center,
-                            padding: _image != null ? EdgeInsets.all(0) : EdgeInsets.all(35),
-                            decoration: _image != null ? BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.grey[200]
-                            ) : BoxDecoration(
-                              color: Colors.grey[300],
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-
+                          ],
+                        ),
+                      ),
                       RichText(
                         textAlign: TextAlign.start,
                         text: TextSpan(
@@ -300,7 +397,7 @@ class _UploadFormState extends State<UploadForm> {
                             : 'Value can be yes or no' ,
 
                         onChanged: (val) {
-                          setState(() => _isneutered = val);
+                          setState(() => _neutered = val);
                         },
                       ),
 
@@ -373,6 +470,7 @@ class _UploadFormState extends State<UploadForm> {
 
                       SizedBox(height: 10,),
                       TextFormField(
+                        maxLength: 10,
                         style: TextStyle(color: Colors.black87),
                         decoration: richTextDecoration.copyWith(
                             labelText: 'Phone number'
@@ -428,14 +526,15 @@ class _UploadFormState extends State<UploadForm> {
 
                       SizedBox(height: 10,),
                       TextFormField(
+                        maxLength: 45,
                         style: TextStyle(color: Colors.black87),
                         decoration: richTextDecoration.copyWith(
                           labelText: 'Area',
                           hintText: '90 Feet Road, Bhandup East',
                         ),
                         validator: (val) => (val.isEmpty) ? 'Enter area name'
-                            : (val.length <= 45) ? 'Cannot enter more than 45 characters'
-                            : null,
+                            : (val.length <= 45) ? null
+                            : 'Cannot enter more than 45 characters',
                         onChanged: (val) {
                           setState(() => _area = val);
                         },
@@ -458,6 +557,7 @@ class _UploadFormState extends State<UploadForm> {
 
                       SizedBox(height: 10,),
                       TextFormField(
+                        maxLength: 6,
                         style: TextStyle(color: Colors.black87),
                         decoration: richTextDecoration.copyWith(
                           labelText: 'Pin code',
@@ -481,7 +581,13 @@ class _UploadFormState extends State<UploadForm> {
                           ),),
                         style: textButtonStyle,
                         onPressed: () async {
-                          if(_formKey.currentState.validate() && _image != null) {
+
+                          if(_formKey.currentState.validate() && _image != null
+                            && _image1 != null && _image2 != null) {
+
+                            setState(() {
+                              _isUploading = true;
+                            });
 
                             await storage.ref(fileName).putFile(
                                 imageFile,
@@ -495,12 +601,37 @@ class _UploadFormState extends State<UploadForm> {
                             url  = await FirebaseStorage.instance
                                    .ref(fileName).getDownloadURL();
 
-                            if (url != null) {
+                            await storage.ref(fileName1).putFile(
+                                imageFile1,
+                                SettableMetadata(customMetadata: {
+                                  'uploaded_by': _name,
+                                  'description': DateTime.now().toString()
+                                }
+                                )
+                            );
 
-                              _isneutered == 'yes' ?
-                                    _neutered = true
-                                  : _neutered = false;
+                            url1 = await FirebaseStorage.instance
+                                .ref(fileName1).getDownloadURL();
 
+                            await storage.ref(fileName2).putFile(
+                                imageFile2,
+                                SettableMetadata(customMetadata: {
+                                  'uploaded_by': _name,
+                                  'description': DateTime.now().toString()
+                                }
+                                )
+                            );
+
+                            url2  = await FirebaseStorage.instance
+                                .ref(fileName2).getDownloadURL();
+
+                            print('urlVal- $url $url1 $url2');
+
+                            if (url != null && url1 != null && url2 != null) {
+
+                              _neutered == 'yes' ?
+                                    _isNeutered = true
+                                  : _isNeutered = false;
 
                               petData.doc().set( {
                                 'breed': _breed,
@@ -513,14 +644,17 @@ class _UploadFormState extends State<UploadForm> {
                                 'days': _days,
                                 'area': _area,
                                 'pin': int.parse(_pin),
-                                'neutered': _neutered,
+                                'neutered': _isNeutered,
                                 'status': 'Not Adopted',
                                 'userId': getuser.uid,
                                 'imgUrl': url,
+                                'imgUrl1': url1,
+                                'imgUrl2': url2,
 
                                 }
                               );
-                              Navigator.pop(context);
+
+                                Navigator.pop(context);
                             }
                             else {
                               _error = 'Error while loading data';
@@ -532,7 +666,26 @@ class _UploadFormState extends State<UploadForm> {
                           }
                         },
                       ),
-                      SizedBox(height: 15),
+                      SizedBox(height: 20,),
+                      _isUploading ?
+                      Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                child: Text(
+                                  'uploading...',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
+                              SizedBox(height: 10,),
+                              CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                              )
+                            ],
+                          ))
+                          : Container(),
+                      SizedBox(height: 10),
                       Center(
                         child: Text(
                           '$_error',
@@ -550,7 +703,7 @@ class _UploadFormState extends State<UploadForm> {
                 width: _containerWidth,
                 height: _containerHeight,
                 margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                padding: EdgeInsets.fromLTRB(20, 5, 20, 0),
               ),
             ],
           ),

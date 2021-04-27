@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluuter_provider/constants/decorate.dart';
@@ -33,6 +34,10 @@ class DetailScreen extends StatelessWidget {
     final totSize = MediaQuery.of(context).size;
     final getuser = Provider.of<UserData>(context);
 
+    final List<String> imgList = [
+      dbData.imgUrl, dbData.imgUrl1, dbData.imgUrl2];
+    
+    
     String _neutered = '';
 
     if (dbData.neutered.toString().toLowerCase() == 'true') {
@@ -81,22 +86,47 @@ class DetailScreen extends StatelessWidget {
 
           //Image of pet
           Container(
-            padding: EdgeInsets.fromLTRB(10, 80, 10, 0),
+            padding: EdgeInsets.fromLTRB(10, 130, 10, 0),
             child: Align(
               alignment: Alignment.topCenter,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(15.0),
-                child: CachedNetworkImage(
-                  placeholder: (context, url) => CircularProgressIndicator(
-                    backgroundColor: Colors.grey[600], 
-                    strokeWidth: 2,
-                  ),
-                  imageUrl: dbData.imgUrl,
-                  fit: BoxFit.cover,
-                  width: 300,
-                  height: 270,
+              child: CarouselSlider(
+                options: CarouselOptions(
+                  autoPlay: true,
+                  aspectRatio: 2.0,
+                  enlargeCenterPage: false,
                 ),
+                items: imgList.map((item) =>
+                    Container(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15.0),
+                      child: CachedNetworkImage(
+                        placeholder: (context, url) => CircularProgressIndicator(
+                          backgroundColor: Colors.grey[600],
+                          strokeWidth: 2,
+                        ),
+                        imageUrl: item,
+                        fit: BoxFit.cover,
+                        width: 300,
+                        height: 290,
+                      ),
+                  ),
+                    ),
+                ).toList(),
               ),
+              // child: ClipRRect(
+              //   borderRadius: BorderRadius.circular(15.0),
+              //   child: CachedNetworkImage(
+              //     placeholder: (context, url) => CircularProgressIndicator(
+              //       backgroundColor: Colors.grey[600],
+              //       strokeWidth: 2,
+              //     ),
+              //     imageUrl: dbData.imgUrl,
+              //     fit: BoxFit.cover,
+              //     width: 300,
+              //     height: 270,
+              //   ),
+              // ),
             ),
           ),
 

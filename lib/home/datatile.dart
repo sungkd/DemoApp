@@ -347,7 +347,8 @@ class DataTile extends StatelessWidget {
                                                   _description, _name, int.parse(_phone),
                                                   _location, dbData.age,dbData.days,
                                                   _area, int.parse(_pin),dbData.neutered,
-                                                  _status, dbData.userId,dbData.imgUrl
+                                                  _status, dbData.userId,dbData.imgUrl,
+                                                  dbData.imgUrl1, dbData.imgUrl2
                                               );
 
 
