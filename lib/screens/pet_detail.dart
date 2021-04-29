@@ -30,6 +30,8 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final double _height = MediaQuery.of(context).size.height;
+
     final List<String> imgList = [
       dbData.imgUrl, dbData.imgUrl1, dbData.imgUrl2];
     
@@ -88,7 +90,7 @@ class DetailScreen extends StatelessWidget {
 
           //Image of pet
           Container(
-            padding: EdgeInsets.fromLTRB(10, 110, 10, 0),
+            padding: EdgeInsets.fromLTRB(10, _height * 0.15, 10, 0),
             child: Align(
               alignment: Alignment.topCenter,
               child: CarouselSlider(
@@ -144,7 +146,7 @@ class DetailScreen extends StatelessWidget {
           Align(
             child: Container(
               height: 170,
-              margin: EdgeInsets.fromLTRB(10,100,10,0),
+              margin: EdgeInsets.fromLTRB(10,_height * 0.10 ,10,0),
               decoration: BoxDecoration(
                 color: Colors.white,
                 boxShadow: shadowList,
@@ -266,7 +268,7 @@ class DetailScreen extends StatelessWidget {
             alignment: Alignment.topLeft,
             child: Container(
               margin: EdgeInsets.fromLTRB(10, 20, 10, 0),
-              padding: EdgeInsets.fromLTRB(15, 550, 15, 0),
+              padding: EdgeInsets.fromLTRB(15, _height * 0.68, 15, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

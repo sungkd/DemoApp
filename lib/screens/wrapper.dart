@@ -13,9 +13,9 @@ class Wrapper extends StatelessWidget {
 
 
     return Scaffold(
-      backgroundColor: Color(0xffFF045C5C),
-      body: SafeArea(
-        child: ChangeNotifierProvider(
+      // backgroundColor: Color(0xffFF045C5C),
+      backgroundColor: Colors.white,
+      body: ChangeNotifierProvider(
           create: (context) => GoogleSignInProvider(),
           child: StreamBuilder(
               stream: FirebaseAuth.instance.authStateChanges(),
@@ -34,7 +34,6 @@ class Wrapper extends StatelessWidget {
               }
           ),
         ),
-      ),
     );
 
 
