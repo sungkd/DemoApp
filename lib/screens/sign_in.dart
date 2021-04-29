@@ -17,13 +17,21 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
 
   final AuthService _auth = AuthService();
-  final _formKey = GlobalKey<FormState>();
+  final _formKey  = GlobalKey<FormState>();
+  final _formKey1 = GlobalKey<FormState>();
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   bool loading = false;
   bool isHidden = false;
+
+  //Store User Name and Password
+  String email = '';
+  String password = '';
+  String error = '';
+  String _passwordresetemail = '';
+
 
   @override
   void dispose() {
@@ -33,19 +41,14 @@ class _SignInState extends State<SignIn> {
     super.dispose();
   }
 
-  //Store User Name and Password
-  String email = '';
-  String password = '';
-  String error = '';
 
   double _containerWidth = 380;
-  double _containerHeight = 440;
+  double _containerHeight = 500;
 
 
   @override
   Widget build(BuildContext context) {
 
-    final totSize = MediaQuery.of(context).size;
 
     return loading ? Loading() : Scaffold(
       // backgroundColor: Color(0xff4ec2c2),
@@ -93,18 +96,109 @@ class _SignInState extends State<SignIn> {
                           },
                         ),
                         SizedBox(height: 20,),
-                        RichText(
-                          textAlign: TextAlign.start,
-                          text: TextSpan(
-                            text: 'Password',
-                            style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold
+                        Row(
+                          children: [
+                            RichText(
+                              textAlign: TextAlign.start,
+                              text: TextSpan(
+                                text: 'Password',
+                                style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold
+                                ),
+                              ),
                             ),
-                          ),
+                            Spacer(),
+                            TextButton(
+                              onPressed: () {
+                                showModalBottomSheet(
+                                 enableDrag: true,
+                                  isScrollControlled: true,
+                                  context: context, builder: (context) {
+                                    return Container(
+                                      height: 400,
+                                      padding: EdgeInsets.all(20),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          RichText(
+                                            text: TextSpan(
+                                              text: 'Password Reset',
+                                              style: TextStyle(
+                                                  color: Colors.black87,
+                                                  fontSize: 20.0,
+                                                  wordSpacing: 1.0,
+                                                  letterSpacing: 1.5,),
+                                            ),
+                                          ),
+                                          SizedBox(height: 15,),
+                                          Form(
+                                            key: _formKey1,
+                                            child: Column(
+                                              children: [
+                                                TextFormField(
+                                                  maxLines: 1,
+                                                  controller: emailController,
+                                                  style: TextStyle(color: Colors.black87),
+                                                  decoration: richTextDecoration.copyWith(
+                                                      labelText: 'Enter Email to reset password',
+                                                      prefixIcon: Icon(LineIcons.envelopeAlt),
+                                                  ), //richTextDecoration.copyWith
+                                                  validator: (val) => val.isEmpty ? 'Enter email' : null,
+                                                  onChanged: (val) {
+                                                    setState(() =>
+                                                    _passwordresetemail = val);
+                                                  },
+                                                ),
+                                                SizedBox(height: 15,),
+                                                TextButton(
+                                                  child: Text('Reset',
+                                                    style: TextStyle(
+                                                        color: Colors.white
+                                                    ),),
+                                                    style: textButtonStyle,
+                                                    onPressed: () async {
+                                                      if(_formKey1.currentState.validate()) {
+
+                                                        _auth.resetPassword(_passwordresetemail);
+
+                                                        setState(() {
+                                                          email = '';
+                                                          password = '';
+
+                                                        });
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+
+                                                        ScaffoldMessenger.of(context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                            content:
+                                                            Text('Password Reset link sent to - $_passwordresetemail'),
+                                                            backgroundColor: Colors.blueAccent,
+                                                            duration: Duration(seconds: 5),
+                                                          ),
+                                                        );
+                                                      }
+                                                    },
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                );
+                              },
+                              style: TextButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  minimumSize:Size(5,5)),
+                              child: Text('Forgot Password?'),
+                            )
+                          ],
                         ),
-                        SizedBox(height: 10,),
                         TextFormField(
                           obscureText: isHidden,
                           style: TextStyle(color: Colors.black87),

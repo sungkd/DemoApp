@@ -1,12 +1,13 @@
 import 'package:android_intent/android_intent.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluuter_provider/modals/user.dart';
 import 'package:fluuter_provider/screens/upload_form.dart';
+import 'package:fluuter_provider/services/google_sign_in.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:fluuter_provider/services/auth.dart';
-import 'package:provider/provider.dart';
 import 'package:fluuter_provider/home/home.dart';
 import 'package:fluuter_provider/screens/aboutus.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NavigationDrawer extends StatelessWidget {
@@ -14,9 +15,8 @@ class NavigationDrawer extends StatelessWidget {
   final AuthService _auth = AuthService();
   final _padding = EdgeInsets.symmetric(horizontal: 20, vertical: 30);
 
-
   _sendEmail() async {
-    const url = 'mailto:sungkd123@outlook.com';
+    const url = 'mailto:petadoptfeedback@gmail.com';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -26,8 +26,7 @@ class NavigationDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final getuser = Provider.of<UserData>(context);
+    final user = FirebaseAuth.instance.currentUser;
 
     return SafeArea(
       child: Drawer(
@@ -39,7 +38,8 @@ class NavigationDrawer extends StatelessWidget {
               padding: _padding,
               children: [
                  buildHeader(
-                  name: getuser.email,
+                  name: user.displayName,
+                  img: user.photoURL,
                 ),
                 const SizedBox(height: 20,),
                 buildMenuItems(
@@ -89,16 +89,17 @@ class NavigationDrawer extends StatelessWidget {
                   text: 'Feedback',
                   icon: LineIcons.envelopeAlt,
                   onClicked: () {
-                    _sendEmail();
+                     _sendEmail();
                   }
                 ),
-
 
                 buildMenuItems(
                   text: 'Logout',
                   icon: LineIcons.alternateSignOut,
                   onClicked: () async {
-                    await _auth.signOut();
+                    final provider =
+                    Provider.of<GoogleSignInProvider>(context, listen: false);
+                    provider.logout();
                   }
                 ),
                 SizedBox(height: 30,),
@@ -145,7 +146,7 @@ class NavigationDrawer extends StatelessWidget {
 
   }
 
-  Widget buildHeader({name}) {
+  Widget buildHeader({name, img}) {
     return Container(
       decoration: BoxDecoration(
           shape: BoxShape.rectangle,
@@ -156,8 +157,8 @@ class NavigationDrawer extends StatelessWidget {
         children: [
           Center(
             child: CircleAvatar(
-              backgroundImage: AssetImage('assets/dog1.jpg'),
-              radius: 35.0,
+              backgroundImage: NetworkImage(img),
+              radius: 50.0,
             ),
           ),
           SizedBox(height: 10,),
@@ -215,4 +216,5 @@ class NavigationDrawer extends StatelessWidget {
 
     }
   }
+
 }

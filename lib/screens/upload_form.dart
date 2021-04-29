@@ -1,10 +1,10 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:fluuter_provider/constants/decorate.dart';
-import 'package:fluuter_provider/modals/user.dart';
-import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
@@ -54,6 +54,7 @@ class _UploadFormState extends State<UploadForm> {
   String _error = '' ;
 
   bool _isUploading = false;
+
 
   Future getImage(String _gallery, int _number) async {
 
@@ -126,10 +127,12 @@ class _UploadFormState extends State<UploadForm> {
   Widget build(BuildContext context) {
 
     double _containerWidth = 380;
-    // double _containerHeight = MediaQuery.of(context).size.height;
     double _containerHeight = 2000;
 
-    final getuser = Provider.of<UserData>(context);
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('dd-MM-yyyy  kk:mm').format(now);
+
+    final user = FirebaseAuth.instance.currentUser;
     final CollectionReference petData = FirebaseFirestore.instance.collection('Data');
     FirebaseStorage storage = FirebaseStorage.instance;
 
@@ -646,10 +649,11 @@ class _UploadFormState extends State<UploadForm> {
                                 'pin': int.parse(_pin),
                                 'neutered': _isNeutered,
                                 'status': 'Not Adopted',
-                                'userId': getuser.uid,
+                                'userId': user.uid,
                                 'imgUrl': url,
                                 'imgUrl1': url1,
                                 'imgUrl2': url2,
+                                'dateTime' : formattedDate.toString(),
 
                                 }
                               );

@@ -14,7 +14,8 @@ class DatabaseService {
       String name,  int phone,  String location, int age,
       String days, String area, int pin, bool neutered,
       String status, dynamic userId,
-      String url, String url1, String url2) async
+      String url, String url1, String url2,
+      dynamic dateTime) async
   {
 
     return await petData.doc(uid).set(
@@ -35,6 +36,7 @@ class DatabaseService {
           'imgUrl': url,
           'imgUrl1': url1,
           'imgUrl2': url2,
+          'dateTime': dateTime,
         }
     );
   }
@@ -60,6 +62,7 @@ class DatabaseService {
         imgUrl: doc.data()['imgUrl'] ?? '',
         imgUrl1: doc.data()['imgUrl1'] ?? '',
         imgUrl2: doc.data()['imgUrl2'] ?? '',
+        dateTime: doc.data()['dateTime'] ?? '',
 
       );
     }).toList();
@@ -85,6 +88,7 @@ class DatabaseService {
       imgUrl: snapshot.data()['imgUrl'] ,
       imgUrl1: snapshot.data()['imgUrl1'] ,
       imgUrl2: snapshot.data()['imgUrl2'] ,
+      dateTime: snapshot.data()['dateTime'] ,
 
     );
   }
@@ -103,37 +107,25 @@ class DatabaseService {
 }
 
 
-class ProcessUid {
+class UserDetails {
+
+  final dynamic userUid;
+  UserDetails({this.userUid});
 
   //Collection Reference
-  final CollectionReference petData = FirebaseFirestore.instance.collection('Data');
+  final CollectionReference createUsers = FirebaseFirestore.instance.collection('User');
 
-  //Get data from snapshot
-  GetUidOfDocument _uGetUidOfDocumentFromSnapshot (DocumentSnapshot snapshot) {
-    return GetUidOfDocument(
-      breed: snapshot.data()['breed'] ,
-      gender: snapshot.data()['gender'] ,
-      description: snapshot.data()['description'] ,
-      name: snapshot.data()['name'] ,
-      phone: snapshot.data()['phone'] ,
-      location: snapshot.data()['location'] ,
-      age: snapshot.data()['age'],
-      days: snapshot.data()['days'],
-      area: snapshot.data()['area'],
-      pin: snapshot.data()['pin'],
-      neutered: snapshot.data()['neutered'],
-      status: snapshot.data()['status'] ,
-      userId: snapshot.data()['userId'] ,
-      uid: snapshot.id,
-      imgUrl: snapshot.data()['imgUrl'] ,
-      imgUrl1: snapshot.data()['imgUrl1'] ,
-      imgUrl2: snapshot.data()['imgUrl2'] ,
+  Future createUser(String name) async
+  {
 
+    return await createUsers.doc().set(
+        {
+          'userName': name,
+          'userUid':  userUid,
+        }
     );
   }
 }
-
-
 // class UploadImage {
 //
 //   FirebaseStorage storage = FirebaseStorage.instance;

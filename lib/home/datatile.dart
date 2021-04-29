@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluuter_provider/constants/decorate.dart';
@@ -20,7 +21,7 @@ class DataTile extends StatelessWidget {
     final double _radius = 16;
     final double _width = MediaQuery.of(context).size.width;
 
-    final getuser = Provider.of<UserData>(context);
+    final user = FirebaseAuth.instance.currentUser;
 
     final _formKey = GlobalKey<FormState>();
 
@@ -59,7 +60,7 @@ class DataTile extends StatelessWidget {
                     buildImage(_radius, dbData.imgUrl),
                   ],
                 ),
-                dbData.userId == getuser.uid ? TextButton(
+                dbData.userId == user.uid ? TextButton(
                     onPressed: () {
                      dbData.status == 'Not Adopted' ?
                       showModalBottomSheet(
@@ -158,6 +159,7 @@ class DataTile extends StatelessWidget {
 
                                         SizedBox(height: 10,),
                                         TextFormField(
+                                          maxLength: 10,
                                           initialValue: dbData.phone.toString(),
                                           style: TextStyle(color: Colors.black87),
                                           decoration: richTextDecoration.copyWith(
@@ -219,6 +221,7 @@ class DataTile extends StatelessWidget {
 
                                         SizedBox(height: 10,),
                                         TextFormField(
+                                          maxLength: 45,
                                           initialValue: dbData.area,
                                           style: TextStyle(color: Colors.black87),
                                           decoration: richTextDecoration.copyWith(
@@ -227,8 +230,8 @@ class DataTile extends StatelessWidget {
                                               isDense: true
                                           ),
                                           validator: (val) => (val.isEmpty) ? 'Enter area name'
-                                              : (val.length <= 45) ? 'Cannot enter more than 45 characters'
-                                              : null,
+                                              : (val.length <= 45) ? null
+                                              : 'Cannot enter more than 45 characters',
                                           onChanged: (val) {
                                             _area = val;
                                           },
@@ -251,6 +254,7 @@ class DataTile extends StatelessWidget {
 
                                         SizedBox(height: 10,),
                                         TextFormField(
+                                          maxLength: 6,
                                           initialValue: dbData.pin.toString(),
                                           style: TextStyle(color: Colors.black87),
                                           decoration: richTextDecoration.copyWith(
@@ -303,60 +307,63 @@ class DataTile extends StatelessWidget {
                                         ),
 
                                         SizedBox(height: 10,),
-                                        TextButton(
-                                          child: Text('Update',
-                                            style: TextStyle(
-                                                color: Colors.white
-                                            ),),
-                                          style: textButtonStyle,
-                                          onPressed: () {
-                                            if(_formKey.currentState.validate()) {
+                                        Center(
+                                          child: TextButton(
+                                            child: Text('Update',
+                                              style: TextStyle(
+                                                  color: Colors.white
+                                              ),),
+                                            style: textButtonStyle,
+                                            onPressed: () {
+                                              if(_formKey.currentState.validate()) {
 
-                                              if (_description.isEmpty) {
-                                                _description = dbData.description;
+                                                if (_description.isEmpty) {
+                                                  _description = dbData.description;
+                                                }
+
+                                                if (_name.isEmpty) {
+                                                  _name = dbData.name;
+                                                }
+
+                                                if (_phone.isEmpty) {
+                                                  _phone = dbData.phone.toString();
+                                                }
+
+                                                if (_location.isEmpty) {
+                                                  _location = dbData.location;
+                                                }
+
+                                                if (_area.isEmpty) {
+                                                  _area = dbData.area;
+                                                }
+
+                                                if (_pin.isEmpty) {
+                                                  _pin = dbData.pin.toString();
+                                                }
+
+                                                if (_status.isEmpty) {
+                                                  _status = dbData.status;
+                                                }
+
+                                                print('$_status - $_description');
+
+                                                DatabaseService(uid: dbData.uid).
+                                                    updateUserData(dbData.breed, dbData.gender,
+                                                    _description, _name, int.parse(_phone),
+                                                    _location, dbData.age,dbData.days,
+                                                    _area, int.parse(_pin),dbData.neutered,
+                                                    _status, dbData.userId,dbData.imgUrl,
+                                                    dbData.imgUrl1, dbData.imgUrl2,
+                                                    dbData.dateTime
+                                                );
+
+
+                                                Navigator.pop(context);
+
                                               }
 
-                                              if (_name.isEmpty) {
-                                                _name = dbData.name;
-                                              }
-
-                                              if (_phone.isEmpty) {
-                                                _phone = dbData.phone.toString();
-                                              }
-
-                                              if (_location.isEmpty) {
-                                                _location = dbData.location;
-                                              }
-
-                                              if (_area.isEmpty) {
-                                                _area = dbData.area;
-                                              }
-
-                                              if (_pin.isEmpty) {
-                                                _pin = dbData.pin.toString();
-                                              }
-
-                                              if (_status.isEmpty) {
-                                                _status = dbData.status;
-                                              }
-
-                                              print('$_status - $_description');
-
-                                              DatabaseService(uid: dbData.uid).
-                                                  updateUserData(dbData.breed, dbData.gender,
-                                                  _description, _name, int.parse(_phone),
-                                                  _location, dbData.age,dbData.days,
-                                                  _area, int.parse(_pin),dbData.neutered,
-                                                  _status, dbData.userId,dbData.imgUrl,
-                                                  dbData.imgUrl1, dbData.imgUrl2
-                                              );
-
-
-                                              Navigator.pop(context);
-
-                                            }
-
-                                          },
+                                            },
+                                          ),
                                         ),
 
                                       ],

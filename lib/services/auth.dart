@@ -37,6 +37,9 @@ class AuthService {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       User userval = result.user;
+
+      User user = FirebaseAuth.instance.currentUser;
+
       return _userFromFirebaseUser(userval);
     }
 
@@ -58,8 +61,8 @@ class AuthService {
       //     '2 weeks old puppy, friendly and playful ',
       //     'Sunny', 12345678, 'Mumbai', 'Not Adopted');
 
-      return _userFromFirebaseUser(userval);
 
+      return _userFromFirebaseUser(userval);
 
     }
 
@@ -80,6 +83,11 @@ class AuthService {
       print(e.toString());
       return null;
     }
+  }
+
+  //Password Reset
+  Future<void> resetPassword(String email) async {
+    await _auth.sendPasswordResetEmail(email: email);
   }
 
 

@@ -6,8 +6,6 @@ import 'package:fluuter_provider/constants/decorate.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:fluuter_provider/modals/fetchdata.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:provider/provider.dart';
-import 'package:fluuter_provider/modals/user.dart';
 
 
 class DetailScreen extends StatelessWidget {
@@ -30,9 +28,6 @@ class DetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-    final totSize = MediaQuery.of(context).size;
-    final getuser = Provider.of<UserData>(context);
 
     final List<String> imgList = [
       dbData.imgUrl, dbData.imgUrl1, dbData.imgUrl2];
@@ -133,7 +128,7 @@ class DetailScreen extends StatelessWidget {
           /*Breed Gender,Location,Age Container*/
           Align(
             child: Container(
-              height: 150,
+              height: 170,
               margin: EdgeInsets.fromLTRB(10,100,10,0),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -222,6 +217,28 @@ class DetailScreen extends StatelessWidget {
                         ),
                       ],
                     ),
+                    SizedBox(height: 10,),
+                    Row(
+                      children: [
+                        SizedBox(width: 5,),
+                        RichText(
+                          text: TextSpan(
+                            text: 'Posted on: ',
+                            style: TextStyle(
+                              color: Colors.grey[600], fontSize: 15.0,
+                            ),
+                          ),
+                        ),
+                        RichText(
+                          text: TextSpan(
+                            text: dbData.dateTime.toString(),
+                            style: TextStyle(
+                              color: Colors.grey[600], fontSize: 15.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -233,7 +250,7 @@ class DetailScreen extends StatelessWidget {
             alignment: Alignment.topLeft,
             child: Container(
               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              padding: EdgeInsets.fromLTRB(15, 530, 15, 0),
+              padding: EdgeInsets.fromLTRB(15, 540, 15, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

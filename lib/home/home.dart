@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluuter_provider/home/update_form.dart';
 import 'package:fluuter_provider/screens/upload_form.dart';
-import 'package:fluuter_provider/services/auth.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:fluuter_provider/services/database.dart';
 import 'package:provider/provider.dart';
@@ -16,22 +14,8 @@ class Authenticate extends StatefulWidget {
 
 class _AuthenticateState extends State<Authenticate> {
 
-  final AuthService _auth = AuthService();
-
   @override
   Widget build(BuildContext context) {
-
-    void _showUpdatePanel() {
-      showModalBottomSheet(
-          context: context,
-          builder: (context) {
-            return Container(
-              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
-              child: UpdateForm(),
-            );
-          }
-      );
-    }
 
     return StreamProvider<List<DispData>>.value(
       initialData: [],
@@ -42,7 +26,7 @@ class _AuthenticateState extends State<Authenticate> {
         appBar: AppBar(
           title: RichText(
             text: TextSpan(
-              text: "AdoptMe",
+              text: "Pet Adopt",
               style: TextStyle(
                 color: Colors.white,
                 letterSpacing: 1.0,
@@ -58,14 +42,6 @@ class _AuthenticateState extends State<Authenticate> {
 
         body: SafeArea(
           child: DataList(),
-          // child: Container(
-          //     decoration: BoxDecoration(
-          //       image: DecorationImage(
-          //           image: AssetImage('assets/dog1.jpg'),
-          //           fit: BoxFit.cover
-          //       ),
-          //     ),
-          //     child: DataList(),),
         ),
         floatingActionButton: FloatingActionButton(
           foregroundColor: Colors.white,

@@ -15,7 +15,6 @@ class AboutUs extends StatelessWidget {
         'dedicated platform for pet adoption where anyone can request '
         'for adoption and third party dependency will be reduced. ';
 
-
     return Scaffold(
       appBar: AppBar(
         title: RichText(
