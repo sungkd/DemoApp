@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluuter_provider/constants/decorate.dart';
+import 'package:fluuter_provider/screens/imageview.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:fluuter_provider/modals/fetchdata.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -46,7 +47,13 @@ class DetailScreen extends StatelessWidget {
     }
     else
       {
-        _neutered = 'Not Neutered';
+        if(dbData.gender.toLowerCase() == 'male') {
+          _neutered = 'Not Neutered';
+        }
+        else
+          {
+            _neutered = 'Not Spayed';
+          }
       }
 
     return Scaffold(
@@ -81,7 +88,7 @@ class DetailScreen extends StatelessWidget {
 
           //Image of pet
           Container(
-            padding: EdgeInsets.fromLTRB(10, 130, 10, 0),
+            padding: EdgeInsets.fromLTRB(10, 110, 10, 0),
             child: Align(
               alignment: Alignment.topCenter,
               child: CarouselSlider(
@@ -95,15 +102,23 @@ class DetailScreen extends StatelessWidget {
                       padding: EdgeInsets.only(left: 10, right: 10),
                       child: ClipRRect(
                       borderRadius: BorderRadius.circular(15.0),
-                      child: CachedNetworkImage(
-                        placeholder: (context, url) => CircularProgressIndicator(
-                          backgroundColor: Colors.grey[600],
-                          strokeWidth: 2,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (context) => ImageView(
+                                  imgUrl:item
+                              )));
+                        },
+                        child: CachedNetworkImage(
+                          placeholder: (context, url) => CircularProgressIndicator(
+                            backgroundColor: Colors.grey[600],
+                            strokeWidth: 2,
+                          ),
+                          imageUrl: item,
+                          fit: BoxFit.contain,
+                          // width: 400,
+                          // height: 400,
                         ),
-                        imageUrl: item,
-                        fit: BoxFit.cover,
-                        width: 300,
-                        height: 290,
                       ),
                   ),
                     ),
@@ -245,12 +260,13 @@ class DetailScreen extends StatelessWidget {
             ),
           ),
 
+          SizedBox(height: 20,),
           /*Middle Section to display Description*/
           Align(
             alignment: Alignment.topLeft,
             child: Container(
-              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              padding: EdgeInsets.fromLTRB(15, 540, 15, 0),
+              margin: EdgeInsets.fromLTRB(10, 20, 10, 0),
+              padding: EdgeInsets.fromLTRB(15, 550, 15, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
