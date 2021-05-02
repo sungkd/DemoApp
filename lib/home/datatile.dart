@@ -4,15 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluuter_provider/constants/decorate.dart';
 import 'package:fluuter_provider/modals/fetchdata.dart';
-import 'package:fluuter_provider/modals/user.dart';
 import 'package:fluuter_provider/screens/pet_detail.dart';
 import 'package:fluuter_provider/services/database.dart';
-import 'package:provider/provider.dart';
+import 'package:line_icons/line_icons.dart';
 
 class DataTile extends StatelessWidget {
 
   final DispData dbData;
   DataTile({this.dbData});
+
 
 
   @override
@@ -56,7 +56,7 @@ class DataTile extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Expanded(child: buildText(dbData.status,dbData.breed)),
+                    Expanded(child: buildText(dbData.breed,dbData.location, dbData.description)),
                     buildImage(_radius, dbData.imgUrl),
                   ],
                 ),
@@ -101,6 +101,7 @@ class DataTile extends StatelessWidget {
 
                                         SizedBox(height: 10,),
                                         TextFormField(
+                                          maxLength: 250,
                                           initialValue: dbData.description,
                                           maxLines: 5,
                                           style: TextStyle(color: Colors.black87),
@@ -354,12 +355,34 @@ class DataTile extends StatelessWidget {
                                                     _area, int.parse(_pin),dbData.neutered,
                                                     _status, dbData.userId,dbData.imgUrl,
                                                     dbData.imgUrl1, dbData.imgUrl2,
-                                                    dbData.dateTime
+                                                    dbData.dateTime,user.email,
+                                                    user.displayName, user.photoURL,
+                                                    user.emailVerified
                                                 );
 
 
                                                 Navigator.pop(context);
-
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                    SnackBar(
+                                                        backgroundColor: Colors.blue[700],
+                                                        content: Row(
+                                                          children: [
+                                                            Icon(LineIcons.thumbsUpAlt,
+                                                            color: Colors.white,
+                                                            size: 20.0,),
+                                                            SizedBox(width: 20,),
+                                                            RichText(
+                                                              text: TextSpan(
+                                                                text: 'Data updated successfully',
+                                                                style: TextStyle(
+                                                                  color: Colors.white,
+                                                                  letterSpacing: 1.2,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        )));
                                               }
 
                                             },
@@ -398,49 +421,62 @@ class DataTile extends StatelessWidget {
                 ) : Container(),
               ],
             ),
-            // child: ListTile(
-            //   tileColor: (dbData.status == 'Adopted') ? Colors.grey : Colors.white,
-            //   leading: CircleAvatar(
-            //     backgroundImage: NetworkImage(dbData.imgUrl),
-            //     radius: 30.0,
-            //     backgroundColor: Colors.white,
-            //   ),
-            //   enabled: (dbData.status == 'Adopted') ? false : true,
-            //   title: Text(dbData.status),
-            //   subtitle: Text(dbData.description),
-            //   isThreeLine: true,
-            //   onTap: () {
-            //     Navigator.push(context, MaterialPageRoute(
-            //         builder: (context) => DetailScreen(dbData: dbData),
-            //     )
-            //     );
-            //     print('Pressed');
-            //   },
-            // ),
           ),
         ),
+
+        // child: ListTile(
+        //   tileColor: (dbData.status == 'Adopted') ? Colors.grey : Colors.white,
+        //   leading: CircleAvatar(
+        //     backgroundImage: NetworkImage(dbData.imgUrl),
+        //     radius: 30.0,
+        //     backgroundColor: Colors.white,
+        //   ),
+        //   enabled: (dbData.status == 'Adopted') ? false : true,
+        //   title: Text(dbData.status),
+        //   subtitle: Text(dbData.description),
+        //   isThreeLine: true,
+        //   onTap: () {
+        //     Navigator.push(context, MaterialPageRoute(
+        //         builder: (context) => DetailScreen(dbData: dbData),
+        //     )
+        //     );
+        //     print('Pressed');
+        //   },
+        // ),
+
       ),
     );
   }
 
-  Widget buildText(String status, String description) => Container(
+  Widget buildText(String breed, String location, String description) => Container(
     padding: EdgeInsets.all(16),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            RichText(text: TextSpan(text: status,
+            RichText(text: TextSpan(text: breed,
                 style: TextStyle(color: Colors.black87, fontSize: 20))),
           ],
         ),
         Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Wrap(
               direction: Axis.horizontal,
               alignment: WrapAlignment.start,
               children: [
-                RichText(text: TextSpan(text: description,
+                RichText(text: TextSpan(text: location,
+                    style: TextStyle(color: Colors.grey, fontSize: 15))),
+              ],
+            ),
+            Wrap(
+              direction: Axis.horizontal,
+              alignment: WrapAlignment.start,
+              children: [
+                RichText(text: TextSpan(text: description.length >=35 ?
+                                        description.substring(0,28)
+                                        : description,
                     style: TextStyle(color: Colors.grey, fontSize: 15))),
               ],
             ),
@@ -483,7 +519,7 @@ class DataTile extends StatelessWidget {
             ),
             Column(
               children: [
-                RichText(text: TextSpan(text: description.substring(1,8),
+                RichText(text: TextSpan(text: description.length >= 20 ? description.substring(0,15) : description,
                          style: TextStyle(color: Colors.grey, fontSize: 15))),
               ],
             ),

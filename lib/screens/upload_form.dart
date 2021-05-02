@@ -153,6 +153,8 @@ class _UploadFormState extends State<UploadForm> {
           ),
         ),
         centerTitle: true,
+        leading: IconButton(icon: Icon(Icons.arrow_back_ios),
+            onPressed: () { Navigator.pop(context); } ),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -421,6 +423,7 @@ class _UploadFormState extends State<UploadForm> {
                       SizedBox(height: 10,),
                       TextFormField(
                         maxLines: 5,
+                        maxLength: 250,
                         style: TextStyle(color: Colors.black87),
                         decoration: richTextDecoration.copyWith(
                             labelText: 'Pet Detail',
@@ -654,11 +657,16 @@ class _UploadFormState extends State<UploadForm> {
                                 'imgUrl1': url1,
                                 'imgUrl2': url2,
                                 'dateTime' : formattedDate.toString(),
+                                'email': user.email,
+                                'username': user.displayName,
+                                'userimg': user.photoURL,
+                                'userverify': user.emailVerified
 
                                 }
                               );
 
                                 Navigator.pop(context);
+
                             }
                             else {
                               _error = 'Error while loading data';

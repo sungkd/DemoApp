@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluuter_provider/constants/decorate.dart';
 import 'package:fluuter_provider/screens/imageview.dart';
+import 'package:fluuter_provider/screens/uploader_details.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:fluuter_provider/modals/fetchdata.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -82,6 +83,16 @@ class DetailScreen extends StatelessWidget {
                 children: [
                   IconButton(icon: Icon(Icons.arrow_back_ios),
                     onPressed: () { Navigator.pop(context); }
+                  ),
+                  Spacer(),
+                  IconButton(icon: Icon(Icons.supervised_user_circle_rounded,
+                        size: 25,),
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => UploaderDetails(dbData: dbData)
+                        )
+                        );
+                      }
                   ),
                 ],
               ),

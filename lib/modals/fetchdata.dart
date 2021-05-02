@@ -10,13 +10,18 @@ class DispData {
   final dynamic imgUrl1;
   final dynamic imgUrl2;
   final dynamic dateTime;
+  final dynamic email;
+  final dynamic userimg;
+  final dynamic userverify;
+
 
   DispData({
     this.breed, this.gender, this.description,
     this.name, this.phone, this.location,this.age,this.days,
     this.area,this.pin, this.neutered,
     this.status, this.userId, this.uid, this.imgUrl,
-    this.imgUrl1, this.imgUrl2,this.userName, this.dateTime
+    this.imgUrl1, this.imgUrl2,this.dateTime,
+    this.email,this.userName, this.userimg, this.userverify
   });
 }
 

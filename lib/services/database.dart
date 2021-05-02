@@ -15,7 +15,8 @@ class DatabaseService {
       String days, String area, int pin, bool neutered,
       String status, dynamic userId,
       String url, String url1, String url2,
-      dynamic dateTime) async
+      dynamic dateTime, dynamic email,
+      dynamic username, dynamic userimg, dynamic userverify) async
   {
 
     return await petData.doc(uid).set(
@@ -37,6 +38,10 @@ class DatabaseService {
           'imgUrl1': url1,
           'imgUrl2': url2,
           'dateTime': dateTime,
+          'email': email,
+          'username': username,
+          'userimg': userimg,
+          'userverify': userverify,
         }
     );
   }
@@ -63,6 +68,10 @@ class DatabaseService {
         imgUrl1: doc.data()['imgUrl1'] ?? '',
         imgUrl2: doc.data()['imgUrl2'] ?? '',
         dateTime: doc.data()['dateTime'] ?? '',
+        email: doc.data()['email'] ?? '',
+        userName: doc.data()['username'] ?? '',
+        userimg: doc.data()['userimg'] ?? '',
+        userverify: doc.data()['userverify'] ?? '',
 
       );
     }).toList();
@@ -89,10 +98,17 @@ class DatabaseService {
       imgUrl1: snapshot.data()['imgUrl1'] ,
       imgUrl2: snapshot.data()['imgUrl2'] ,
       dateTime: snapshot.data()['dateTime'] ,
+      email: snapshot.data()['email'] ,
+      username: snapshot.data()['username'] ,
+      userimg: snapshot.data()['userimg'] ,
+      userverify: snapshot.data()['userverify'] ,
 
     );
   }
 
+  Stream<QuerySnapshot> get petMeta {
+    return petData.snapshots();
+  }
 
   //Get snapshot of the database
   Stream<List<DispData>> get petUpload {

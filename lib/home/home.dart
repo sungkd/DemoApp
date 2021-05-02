@@ -26,7 +26,7 @@ class _AuthenticateState extends State<Authenticate> {
         appBar: AppBar(
           title: RichText(
             text: TextSpan(
-              text: "Pet Adopt",
+              text: "Adotta Pets",
               style: TextStyle(
                 color: Colors.white,
                 letterSpacing: 1.0,
@@ -38,29 +38,23 @@ class _AuthenticateState extends State<Authenticate> {
           backgroundColor: Color(0xffFF045C5C),
           //backgroundColor: Colors.grey[800],
           elevation: 1.2,
+          actions: [
+            IconButton(icon: Icon(LineIcons.alternateCloudUpload),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => UploadForm(),
+                )
+                );
+              },
+            )
+          ],
         ),
 
         body: SafeArea(
           child: DataList(),
         ),
-        floatingActionButton: FloatingActionButton(
-          foregroundColor: Colors.white,
-          backgroundColor: Colors.red[800],
-          autofocus: true,
-          hoverColor: Colors.teal[800],
-          child: Icon(LineIcons.plus),
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(
-              builder: (context) => UploadForm(),
-            )
-            );
-          },
-        ),
       ),
     );
   }
 
-  Widget buildImages() => SliverToBoxAdapter(
-    child: DataList(),
-  );
 }

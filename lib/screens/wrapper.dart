@@ -1,11 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluuter_provider/home/home.dart';
-import 'package:fluuter_provider/modals/user.dart';
-import 'package:fluuter_provider/screens/authenticate.dart';
 import 'package:fluuter_provider/screens/welcome.dart';
 import 'package:fluuter_provider/services/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class Wrapper extends StatelessWidget {
   @override
@@ -26,7 +25,10 @@ class Wrapper extends StatelessWidget {
                   return buildLoading();
                 }
                 else if (snapshot.hasData) {
-                  return Authenticate();
+                  return ShowCaseWidget(
+                      builder: Builder(
+                        builder: (_) => Authenticate()),
+                  );
                 }
                 else {
                   return Welcome();

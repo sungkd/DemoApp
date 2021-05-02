@@ -1,18 +1,16 @@
 import 'package:android_intent/android_intent.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluuter_provider/screens/upload_form.dart';
+import 'package:fluuter_provider/screens/myuploads.dart';
 import 'package:fluuter_provider/services/google_sign_in.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:fluuter_provider/services/auth.dart';
 import 'package:fluuter_provider/home/home.dart';
-import 'package:fluuter_provider/screens/aboutus.dart';
+import 'package:fluuter_provider/screens/howto.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NavigationDrawer extends StatelessWidget {
 
-  final AuthService _auth = AuthService();
   final _padding = EdgeInsets.symmetric(horizontal: 20, vertical: 30);
 
   _sendEmail() async {
@@ -49,39 +47,39 @@ class NavigationDrawer extends StatelessWidget {
                 ),
 
                 buildMenuItems(
-                  text: 'Upload Form',
+                  text: 'My Uploads',
                   icon:  LineIcons.alternateCloudUpload,
                   onClicked: () => selectedItem(context,1),
                 ),
 
-                buildMenuItems(
-                  text: 'Vets Info',
-                  icon:  LineIcons.hospitalSymbol,
-                  onClicked: () async {
-                    AndroidIntent intent = AndroidIntent(
-                        action: "action_view",
-                        data: 'https://vetsinindia.blogspot.com/'
-                    );
-                    await intent.launch();
-                  },
-                ),
+                // buildMenuItems(
+                //   text: 'Vets Info',
+                //   icon:  LineIcons.hospitalSymbol,
+                //   onClicked: () async {
+                //     AndroidIntent intent = AndroidIntent(
+                //         action: "action_view",
+                //         data: 'https://vetsinindia.blogspot.com/'
+                //     );
+                //     await intent.launch();
+                //   },
+                // ),
+                //
+                // buildMenuItems(
+                //   text: 'Animal Welfare Organisation',
+                //   icon:  LineIcons.medkit,
+                //   onClicked: () async {
+                //     AndroidIntent intent = AndroidIntent(
+                //         action: "action_view",
+                //         data: 'http://animalwelfareorganisations.blogspot.com/'
+                //     );
+                //     await intent.launch();
+                //   },
+                // ),
+
 
                 buildMenuItems(
-                  text: 'Animal Welfare Organisation',
-                  icon:  LineIcons.medkit,
-                  onClicked: () async {
-                    AndroidIntent intent = AndroidIntent(
-                        action: "action_view",
-                        data: 'http://animalwelfareorganisations.blogspot.com/'
-                    );
-                    await intent.launch();
-                  },
-                ),
-
-
-                buildMenuItems(
-                  text: 'About',
-                  icon: LineIcons.infoCircle,
+                  text: 'How to use',
+                  icon: LineIcons.questionCircleAlt,
                   onClicked: () => selectedItem(context,2),
                 ),
 
@@ -202,7 +200,7 @@ class NavigationDrawer extends StatelessWidget {
         break;
       case 1:
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => UploadForm(),
+          builder: (context) => MyUploads(),
         )
         );
         break;

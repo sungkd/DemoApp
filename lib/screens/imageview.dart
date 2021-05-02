@@ -11,9 +11,12 @@ class ImageView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.teal[700],
         title: Text('Pet Detail'),
         centerTitle: true,
+        leading: IconButton(icon: Icon(Icons.arrow_back_ios),
+            onPressed: () { Navigator.pop(context); }
+        ),
       ),
       body: CachedNetworkImage(
         placeholder: (context, url) => CircularProgressIndicator(
