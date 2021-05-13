@@ -16,14 +16,18 @@ class _MyDataState extends State<MyData> {
 
 
     return SafeArea(
-        child: Expanded(
-          child: ListView.builder(
-              itemCount: datalist.length,
-              itemBuilder: (context,index) {
-                return MyDataTile(dbData: datalist[index]);
-              }
+      child: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+                itemCount: datalist.length,
+                itemBuilder: (context, index) {
+                  return MyDataTile(dbData: datalist[index]);
+                }
+            ),
           ),
-        ),
+        ],
+      ),
     );
   }
 }

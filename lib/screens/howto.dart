@@ -228,7 +228,7 @@ class AboutUs extends StatelessWidget {
 
               ],
             ),
-           margin: EdgeInsets.fromLTRB(20, 15, 20, 0),
+          margin: EdgeInsets.fromLTRB(20, 15, 20, 15),
           //padding: EdgeInsets.symmetric(horizontal: 50, vertical: 50),
           ),
       ),

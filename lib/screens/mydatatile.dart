@@ -31,7 +31,6 @@ class MyDataTile extends StatelessWidget {
     String _status = '' ;
     String _location = '';
 
-
     if(user.uid == dbData.userId) {
 
       return SingleChildScrollView(
@@ -347,8 +346,6 @@ class MyDataTile extends StatelessWidget {
                                                 _status = dbData.status;
                                               }
 
-                                              print('$_status - $_description');
-
                                               DatabaseService(uid: dbData.uid).
                                               updateUserData(dbData.breed, dbData.gender,
                                                   _description, _name, int.parse(_phone),
@@ -426,7 +423,6 @@ class MyDataTile extends StatelessWidget {
           ),
         ),
       );
-      
     }
     else
       {

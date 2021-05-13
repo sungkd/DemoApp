@@ -53,24 +53,24 @@ class NavigationDrawer extends StatelessWidget {
                 ),
 
                 // buildMenuItems(
-                //   text: 'Vets Info',
+                //   text: 'Privacy Policy',
                 //   icon:  LineIcons.hospitalSymbol,
                 //   onClicked: () async {
                 //     AndroidIntent intent = AndroidIntent(
                 //         action: "action_view",
-                //         data: 'https://vetsinindia.blogspot.com/'
+                //         data: 'https://sungkd.blogspot.com/2021/05/privacy-policy.html'
                 //     );
                 //     await intent.launch();
                 //   },
                 // ),
                 //
                 // buildMenuItems(
-                //   text: 'Animal Welfare Organisation',
+                //   text: 'Terms & Conditions',
                 //   icon:  LineIcons.medkit,
                 //   onClicked: () async {
                 //     AndroidIntent intent = AndroidIntent(
                 //         action: "action_view",
-                //         data: 'http://animalwelfareorganisations.blogspot.com/'
+                //         data: 'https://sungkd.blogspot.com/2021/05/terms-conditions-for-adottapets.html'
                 //     );
                 //     await intent.launch();
                 //   },
@@ -92,24 +92,62 @@ class NavigationDrawer extends StatelessWidget {
                 ),
 
                 buildMenuItems(
-                  text: 'Logout',
-                  icon: LineIcons.alternateSignOut,
-                  onClicked: () async {
-                    final provider =
-                    Provider.of<GoogleSignInProvider>(context, listen: false);
-                    provider.logout();
-                  }
+                    text: 'Logout',
+                    icon: LineIcons.alternateSignOut,
+                    onClicked: () async {
+                      final provider = Provider.of<GoogleSignInProvider>(
+                          context,
+                          listen: false);
+                      provider.logout();
+                    }),
+                SizedBox(
+                  height: 30,
                 ),
-                SizedBox(height: 30,),
+                Row(
+                  children: [
+                    TextButton(
+                      child: RichText(
+                        text: TextSpan(
+                            text: 'Privacy Policy',
+                            style: TextStyle(color: Colors.white)),
+                      ),
+                      onPressed: () async {
+                        AndroidIntent intent = AndroidIntent(
+                            action: "action_view",
+                            data:
+                                'https://sungkd.blogspot.com/2021/05/privacy-policy.html');
+                        await intent.launch();
+                      },
+                    ),
+                    Spacer(),
+                    TextButton(
+                      child: RichText(
+                        text: TextSpan(
+                            text: 'T&C', style: TextStyle(color: Colors.white)),
+                      ),
+                      onPressed: () async {
+                        AndroidIntent intent = AndroidIntent(
+                            action: "action_view",
+                            data:
+                                'https://sungkd.blogspot.com/2021/05/terms-conditions-for-adottapets.html');
+                        await intent.launch();
+                      },
+                    ),
+                  ],
+                ),
+
                 Divider(
                   color: Colors.teal[500],
                   height: 10.0,
                   thickness: 1,
                 ),
-                SizedBox(height: 8,),
+                SizedBox(
+                  height: 8,
+                ),
                 Row(
                   children: [
-                    Icon(LineIcons.copyrightAlt,
+                    Icon(
+                      LineIcons.copyrightAlt,
                       color: Colors.white,
                       size: 18,),
                     SizedBox(width: 10,),
